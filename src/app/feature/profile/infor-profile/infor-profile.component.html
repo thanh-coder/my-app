@@ -1,0 +1,94 @@
+
+<div>
+  <div class="header" style="width: 100%;
+  display: flex;
+  align-items: center;
+ flex-direction: column;
+ justify-content: center;align-items: center;height: auto;background-color:#ddd">
+ <span style="font-size:60px;"><i  class="fas fa-smile-wink"></i></span>
+ <span style="color: white">{{service?.data?.email}}</span>
+ <span style="color: white">{{service?.data?.password}}</span>
+ <span style="color: white">{{profile.urlImage}}</span>
+ <span style="color: white">{{profile.name}}</span>
+ <span style="color: white">{{profile.describe}}</span>
+ </div>
+ <button type="button" [routerLink]="['/update-profile']" class="btn btn-outline-secondary" style="position: absolute;
+ left: 70%;
+ top: 19%;"><a><i class="fas fa-cog"></i></a>
+ edit profile settings</button>
+
+</div>
+
+<div class=content style="width: 50%;margin-left: 200px;margin-top: 30px">
+    <div class="content-top" style="border-bottom: 1px solid #ddd">
+      <span style="margin-right: 39px;
+      opacity: 0.5;">My Articles</span>
+      <span style="color:green;padding: 0 11px;border-bottom:1px solid green ">Favorited Articles</span>
+    </div>
+    <ul class="post" style="list-style: none;">
+      <li class="new-post" style="border-bottom: 1px solid #ddd;display: flex">
+        <div class="new-post" style="display: flex;flex-direction: column;width: 100%;">
+          <div style="display: flex;align-items: center">
+  
+            <span style="width:40px;font-size:44px;color:#ddd"><i  class="fas fa-smile-wink"></i></span>
+            <div style="flex-grow: 1; margin-right: 30px;
+            margin-left: 15px;
+            margin-top: 16px;">
+              <p  style="margin-bottom: 0px;color: green">ismarider</p>
+              <p style="color:#ddd">October 25,2018</p>
+            </div>
+            <button type="button" class="btn btn-outline-success" style="height: 31px; "><i class="fas fa-heart"></i> 0</button>
+  
+          </div>
+            <h3>I like</h3>
+            <p>this</p>
+            <a href="#">Read more...</a>
+  
+        </div>
+  
+      </li>
+      <li class="new-post" style="border-bottom: 1px solid #ddd">
+          <div class="new-post" style="display: flex;flex-direction: column">
+            <div style="display: flex;align-items: center">
+  
+              <span style="width:40px;font-size:44px;color:#ddd"><i  class="fas fa-smile-wink"></i></span>
+              <div style="margin-right: 30px;
+              margin-left: 15px;
+              margin-top: 16px;flex-grow: 1">
+                <p  style="margin-bottom: 0px;color: green">ismarider</p>
+                <p style="color:#ddd">October 25,2018</p>
+              </div>
+              <button type="button" class="btn btn-outline-success" style="height: 31px; "><i class="fas fa-heart"></i> 1</button>
+  
+            </div>
+              <h3>I like</h3>
+              <p>this</p>
+              <a href="#">Read more...</a>
+    
+          </div>
+  
+        </li>
+        <li class="new-post" style="border-bottom: 1px solid #ddd">
+            <div class="new-post" style="display: flex;flex-direction: column">
+              <div style="display: flex;align-items: center">
+  
+                <span style="width:40px;font-size:44px;color:#ddd"><i  class="fas fa-smile-wink"></i></span>
+                <div style="    margin-right: 30px;
+                margin-left: 15px;
+                margin-top: 16px;flex-grow: 1">
+                  <p  style="margin-bottom: 0px;color: green">ismarider</p>
+                  <p style="color:#ddd">October 25,2018</p>
+                </div>
+                <button type="button" class="btn btn-outline-success" style="height: 31px; "><i class="fas fa-heart"></i> 2</button>
+  
+              </div>
+                <h3>I like</h3>
+                <p>this</p>
+                <a href="#">Read more...</a>
+      
+            </div>
+  
+          </li>
+    </ul>
+  </div>
+ 
