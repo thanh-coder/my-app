@@ -29,7 +29,7 @@ export class Service1 {
   ) { }
 
   getArticle(): Promise<any> {
-    return this.apiService.GET(`${config.userURL}/articles`, httpOptions).toPromise();
+    return this.apiService.GET(`articles`, httpOptions).toPromise();
   }
 
   //    getAllUser(): Observable<any> {
@@ -53,7 +53,7 @@ export class Service1 {
     var httpOptions1 = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.accessToken.token })
     }
-    return this.apiService.POST(`${config.userURL}/articles`, body, httpOptions1).toPromise();
+    return this.apiService.POST(`articles`, body, httpOptions1).toPromise();
   }
 
   addComment(comment, slug): Promise<any> {
@@ -65,7 +65,7 @@ export class Service1 {
     var httpOptions1 = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.accessToken.token })
     }
-    return this.apiService.POST(`${config.userURL}/articles/${slug}/comments`, body, httpOptions1).toPromise();
+    return this.apiService.POST(`articles/${slug}/comments`, body, httpOptions1).toPromise();
   }
 
   edit_Article(article, slug) {
@@ -80,7 +80,7 @@ export class Service1 {
     var httpOptions1 = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.accessToken.token })
     }
-    return this.apiService.POST(`${config.userURL}/articles/${slug}`, body, httpOptions1).toPromise();
+    return this.apiService.POST(`articles/${slug}`, body, httpOptions1).toPromise();
   }
 
   delete_Comment_Article(id, slug) {
@@ -88,7 +88,7 @@ export class Service1 {
     var httpOptions1 = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.accessToken.token })
     }
-    return this.apiService.DELETE(`${config.userURL}/articles/${slug}/comments/${id}`, httpOptions1).toPromise();
+    return this.apiService.DELETE(`articles/${slug}/comments/${id}`, httpOptions1).toPromise();
   }
 
   delete_Article(slug) {
@@ -101,7 +101,7 @@ export class Service1 {
 
 
   getArticleFromSlug(slug: any): Promise<any> {
-    return this.apiService.GET(`${config.userURL}/articles/${slug}`, httpOptions).toPromise();
+    return this.apiService.GET(`articles/${slug}`, httpOptions).toPromise();
   }
 
   // async getAllUser(user): Promise<any> {

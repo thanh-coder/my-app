@@ -13,8 +13,8 @@
   </div>
   <button type="button" [routerLink]="['/update-profile']" class="btn btn-outline-secondary" style="position: absolute;
  left: 70%;
- top: 19%;"><a><i
-        class="fas fa-cog"></i></a>
+ top: 19%;">
+    <a><i class="fas fa-cog"></i></a>
     edit profile settings</button>
 </div>
 
@@ -33,22 +33,24 @@
           <div style="display: flex;align-items: center">
             <span style="width:40px;font-size:44px;color:#ddd"><i class="fas fa-smile-wink"></i></span>
             <div style="flex-grow: 1; margin-right: 30px;
-            margin-left: 15px;
-            margin-top: 16px;">
+          margin-left: 15px;
+          margin-top: 16px;">
               <a [routerLink]="['/detail-profile']" style="margin-bottom: 0px;color: green">{{item?.author.username}}</a>
               <p style="color:#ddd">{{item?.createdAt}}</p>
             </div>
-            <button type="button" class="btn btn-outline-success" style="height: 31px; "><i class="fas fa-heart"></i> 0</button>
-
+            <button type="button" class="btn btn-outline-success" style="height: 31px; "><i class="fas fa-heart"></i>
+              0</button>
           </div>
           <h3 [routerLink]="['/detail-article',item.slug]">{{item.title}}</h3>
           <p>{{item.description}}</p>
-          <a href="#" [hidden]="isHidden" (click)="showPost($event,i)">Read more...</a>
-          <p [class.show]="isShow" [hidden]="isShow">{{item?.slug}}
-            <a (click)="disable()" style="color:darkgreen;cursor:pointer;border:1px solid #ddd">hidden content</a>
+          <a href="#" [class.showlink]="isslug == item.slug" style="display: block" (click)="showPost($event,item.slug)">Read
+            more...</a>
+          <p [class.showtitle]="isShow == item.slug" [hidden]="show" style="display: none">{{item?.slug}}
+            <a (click)="disable(item.slug)" style="color:darkgreen;cursor:pointer;border:1px solid #ddd">hidden
+              content</a>
           </p>
         </div>
-      </li>   
+      </li>
     </ul>
 
   </ng-container>
@@ -60,52 +62,30 @@
 
             <span style="width:40px;font-size:44px;color:#ddd"><i class="fas fa-smile-wink"></i></span>
             <div style="flex-grow: 1; margin-right: 30px;
-            margin-left: 15px;
-            margin-top: 16px;">
+          margin-left: 15px;
+          margin-top: 16px;">
               <p style="margin-bottom: 0px;color: green">{{item?.author.username}}</p>
               <p style="color:#ddd">{{item?.createdAt}}</p>
             </div>
-            <button type="button" class="btn btn-outline-success" style="height: 31px; "><i class="fas fa-heart"></i> 0</button>
+            <button type="button" class="btn btn-outline-success" style="height: 31px; "><i class="fas fa-heart"></i>
+              0</button>
 
           </div>
           <h3 [routerLink]="['/detail-article',item.slug]">{{item.title}}</h3>
           <p>{{item.description}}</p>
-          <a href="#" [hidden]="isHidden" (click)="showPost($event,i)">Read more...</a>
-          <p [class.show]="isShow" [hidden]="isShow">{{item?.slug}}
-            <a (click)="disable()" style="color:darkgreen;cursor:pointer;border:1px solid #ddd">hidden content</a>
+          <a href="#" [class.showlink]="isslug == item.slug" style="display: block" (click)="showPost($event,item.slug)">Read
+            more...</a>
+          <p [class.showtitle]="isShow == item.slug" [hidden]="show" style="display: none">{{item?.slug}}
+            <a (click)="disable(item.slug)" style="color:darkgreen;cursor:pointer;border:1px solid #ddd">hidden
+              content</a>
           </p>
 
         </div>
 
       </li>
-      <!-- <li class="new-post" style="border-bottom: 1px solid #ddd">
-          <div class="new-post" style="display: flex;flex-direction: column">
-            <div style="display: flex;align-items: center">
-  
-              <span style="width:40px;font-size:44px;color:#ddd"><i  class="fas fa-smile-wink"></i></span>
-              <div style="margin-right: 30px;
-              margin-left: 15px;
-              margin-top: 16px;flex-grow: 1">
-                <p  style="margin-bottom: 0px;color: green">manhhung</p>
-                <p style="color:#ddd">October 25,2018</p>
-              </div>
-              <button type="button" class="btn btn-outline-success" style="height: 31px; "><i class="fas fa-heart"></i> 1</button>
-  
-            </div>
-            <h3 [routerLink]="['/detail-article',item.slug]" >{{item.title}}</h3>
-            <p>{{item.description}}</p>
-            <a href="#" [hidden]="isHidden"  (click)="showPost($event,i)">Read more...</a>
-            <p [class.show]="isShow" [hidden]="isShow" >{{item?.slug}}
-            <a (click)="disable()" style="color:darkgreen;cursor:pointer;border:1px solid #ddd">hidden content</a>
-            </p>
-            
-        </div>
-  
-        </li> -->
 
     </ul>
   </ng-template>
 
 </div>
 
-<!-- <app-footer></app-footer> -->
