@@ -10,6 +10,7 @@ import { RouterModule, Routes } from '@angular/router';
  import { FooterComponent} from './layout/footer/footer.component';
  import { HeaderComponent} from './layout/header/header.component';
  import { HeaderLoginComponent} from './layout/header-login/header-login.component';
+// import { AccessDirective } from './directive/access.directive';
 @NgModule({
   imports: [
     CommonModule,
@@ -20,7 +21,8 @@ import { RouterModule, Routes } from '@angular/router';
     //  HeaderComponent,
     //  FooterComponent,
     //  HeaderLoginComponent,
-    ],
+    // AccessDirective
+  ],
   providers:[
 LoginGuard,AccessGuard
 ],

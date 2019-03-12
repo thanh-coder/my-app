@@ -1,89 +1,151 @@
 <!-- <app-header></app-header> -->
-<div class=content style="width: 50%;margin-left: 200px;margin-top: 23px;">
-  <div class="content-top" style="border-bottom: 1px solid #ddd">
-    <span style="margin-right: 39px;
-    opacity: 0.5;">Your Feed</span>
-    <span style="color:green;padding: 0 11px;border-bottom:1px solid green ">Global Feed</span>
-  </div>
-  <ul class="post" style="list-style: none;">
-    <li class="new-post" style="border-bottom: 1px solid #ddd;display: flex">
-      <div class="new-post" style="display: flex;flex-direction: column;width: 100%;">
-        <div style="display: flex;align-items: center">
-
-          <span style="width:40px;font-size:44px;color:#ddd"><i  class="fas fa-smile-wink"></i></span>
-          <div style="flex-grow: 1; margin-right: 30px;
-          margin-left: 15px;
-          margin-top: 16px;">
-            <p  style="margin-bottom: 0px;color: green">ismarider</p>
-            <p style="color:#ddd">October 25,2018</p>
-          </div>
-          <button type="button" class="btn btn-outline-success" style="height: 31px; "><i class="fas fa-heart"></i> 0</button>
-
-        </div>
-          <h3>I like</h3>
-          <p>this</p>
-          <a href="#">Read more...</a>
-
-      </div>
-
-    </li>
-    <li class="new-post" style="border-bottom: 1px solid #ddd">
-        <div class="new-post" style="display: flex;flex-direction: column">
-          <div style="display: flex;align-items: center">
-
-            <span style="width:40px;font-size:44px;color:#ddd"><i  class="fas fa-smile-wink"></i></span>
-            <div style="margin-right: 30px;
+<ng-container *ngIf="accessToken.token !=null;else elseBlock">
+  <div class=content style="width: 50%;margin-left: 200px;margin-top: 23px;height: 1000vh;">
+    <div class="content-top" style="border-bottom: 1px solid #ddd">
+      <span style="margin-right: 39px;
+    opacity: 0.5;" id="yourFeed" #yourFeed [class.active]="isactive" (click)="onchange($event)">Your
+        Feed</span>
+      <span style="opacity: 0.5;" [class.active]="!isactive" id="globalFeed" #globalFeed (click)="onchange($event)">Global
+        Feed</span>
+    </div>
+    <ng-container *ngIf="isactive == false;else elseBlock">
+      <ul class="post" style="list-style: none;">
+        <li *ngFor="let item of articles; let i = index; trackBy: trackByFn" class="new-post" style="border-bottom: 1px solid #ddd;display: flex">
+          <div class="new-post" style="display: flex;flex-direction: column;width: 100%;">
+            <div style="display: flex;align-items: center">
+              <span style="width:40px;font-size:44px;color:#ddd"><i class="fas fa-smile-wink"></i></span>
+              <div style="flex-grow: 1; margin-right: 30px;
             margin-left: 15px;
-            margin-top: 16px;flex-grow: 1">
+            margin-top: 16px;">
+                <a [routerLink]="['/detail-profile']" style="margin-bottom: 0px;color: green">{{item?.author.username}}</a>
+                <p style="color:#ddd">{{item?.createdAt}}</p>
+              </div>
+              <button type="button" class="btn btn-outline-success" style="height: 31px; "><i class="fas fa-heart"></i>
+                0</button>
+
+            </div>
+            <h3 [routerLink]="['/detail-article',item.slug]">{{item.title}}</h3>
+            <p>{{item.description}}</p>
+            <a href="#" [class.showlink]="isslug == item.slug" style="display: block" (click)="showPost($event,item.slug)">Read
+              more...</a>
+            <p [class.showtitle]="isShow == item.slug" [hidden]="show" style="display: none">{{item?.slug}}
+              <a (click)="disable(item.slug)" style="color:darkgreen;cursor:pointer;border:1px solid #ddd">hidden
+                content</a>
+            </p>
+
+          </div>
+
+        </li>
+
+        <!-- <li *ngFor="let item of articles; let i = index; trackBy: trackByFn" class="new-post" style="border-bottom: 1px solid #ddd;display: flex">
+        <div class="new-post" style="display: flex;flex-direction: column;width: 100%;">
+          <div style="display: flex;align-items: center">
+  
+            <span style="width:40px;font-size:44px;color:#ddd"><i  class="fas fa-smile-wink"></i></span>
+            <div style="flex-grow: 1; margin-right: 30px;
+            margin-left: 15px;
+            margin-top: 16px;">
               <p  style="margin-bottom: 0px;color: green">ismarider</p>
               <p style="color:#ddd">October 25,2018</p>
             </div>
-            <button type="button" class="btn btn-outline-success" style="height: 31px; "><i class="fas fa-heart"></i> 1</button>
-
+            <button type="button" class="btn btn-outline-success" style="height: 31px; "><i class="fas fa-heart"></i> 0</button>
+  
           </div>
             <h3>I like</h3>
             <p>this</p>
             <a href="#">Read more...</a>
   
         </div>
+  
+      </li> -->
+      </ul>
 
-      </li>
-      <li class="new-post" style="border-bottom: 1px solid #ddd">
-          <div class="new-post" style="display: flex;flex-direction: column">
+    </ng-container>
+    <ng-template #elseBlock>
+      <ul class="post" style="list-style: none;">
+        <li *ngFor="let item of articles; let i = index; trackBy: trackByFn" class="new-post" style="border-bottom: 1px solid #ddd;display: flex">
+          <div class="new-post" style="display: flex;flex-direction: column;width: 100%;">
             <div style="display: flex;align-items: center">
 
-              <span style="width:40px;font-size:44px;color:#ddd"><i  class="fas fa-smile-wink"></i></span>
-              <div style="    margin-right: 30px;
-              margin-left: 15px;
-              margin-top: 16px;flex-grow: 1">
-                <p  style="margin-bottom: 0px;color: green">ismarider</p>
-                <p style="color:#ddd">October 25,2018</p>
+              <span style="width:40px;font-size:44px;color:#ddd"><i class="fas fa-smile-wink"></i></span>
+              <div style="flex-grow: 1; margin-right: 30px;
+            margin-left: 15px;
+            margin-top: 16px;">
+                <p style="margin-bottom: 0px;color: green">{{item?.author.username}}</p>
+                <p style="color:#ddd">{{item?.createdAt}}</p>
               </div>
-              <button type="button" class="btn btn-outline-success" style="height: 31px; "><i class="fas fa-heart"></i> 2</button>
+              <button type="button" class="btn btn-outline-success" style="height: 31px; "><i class="fas fa-heart"></i>
+                0</button>
 
             </div>
-              <h3>I like</h3>
-              <p>this</p>
-              <a href="#">Read more...</a>
-    
+            <h3 [routerLink]="['/detail-article',item.slug]">{{item.title}}</h3>
+            <p>{{item.description}}</p>
+            <a href="#" [class.showlink]="isslug == item.slug" style="display: block" (click)="showPost($event,item.slug)">Read
+              more...</a>
+            <p [class.showtitle]="isShow == item.slug" [hidden]="show" style="display: none">{{item?.slug}}
+              <a (click)="disable(item.slug)" style="color:darkgreen;cursor:pointer;border:1px solid #ddd">hidden
+                content</a>
+            </p>
+
           </div>
 
         </li>
-  </ul>
-</div>
+
+      </ul>
+    </ng-template>
+
+  </div>
+
+</ng-container>
+
 <div class="wrap">
 
   <h3>popular Tags</h3>
-<div class="ticket"><span class="circle"></span><a href="#">CSS3</a></div>
-<div class="ticket"><span class="circle"></span><a href="#">HTML5</a></div>
-<div class="ticket"><span class="circle"></span><a href="#">Design</a></div>
-<div class="ticket"><span class="circle"></span><a href="#">Development</a></div>
-<div class="ticket"><span class="circle"></span><a href="#">CSS3</a></div>
-<div class="ticket"><span class="circle"></span><a href="#">HTML5</a></div>
-<div class="ticket"><span class="circle"></span><a href="#">Design</a></div>
-<div class="ticket"><span class="circle"></span><a href="#">Development</a></div><div class="ticket"><span class="circle"></span><a href="#">CSS3</a></div>
-<div class="ticket"><span class="circle"></span><a href="#">HTML5</a></div>
-<div class="ticket"><span class="circle"></span><a href="#">Design</a></div>
-<div class="ticket"><span class="circle"></span><a href="#">Development</a></div>
+  <div class="ticket"><span class="circle"></span><a href="#">CSS3</a></div>
+  <div class="ticket"><span class="circle"></span><a href="#">HTML5</a></div>
+  <div class="ticket"><span class="circle"></span><a href="#">Design</a></div>
+  <div class="ticket"><span class="circle"></span><a href="#">Development</a></div>
+  <div class="ticket"><span class="circle"></span><a href="#">CSS3</a></div>
+  <div class="ticket"><span class="circle"></span><a href="#">HTML5</a></div>
+  <div class="ticket"><span class="circle"></span><a href="#">Design</a></div>
+  <div class="ticket"><span class="circle"></span><a href="#">Development</a></div>
+  <div class="ticket"><span class="circle"></span><a href="#">CSS3</a></div>
+  <div class="ticket"><span class="circle"></span><a href="#">HTML5</a></div>
+  <div class="ticket"><span class="circle"></span><a href="#">Design</a></div>
+  <div class="ticket"><span class="circle"></span><a href="#">Development</a></div>
 </div>
 <!-- <app-footer></app-footer> -->
+
+<ng-template #elseBlock>
+  <div class=content style="width: 50%;margin-left: 200px;margin-top: 23px;height: 1000vh;">
+    <div class="content-top" style="border-bottom: 1px solid #ddd">
+      <span style="opacity: 0.5;" [class.active]="!isactive" id="globalFeed" #globalFeed (click)="onchange($event)">Global
+        Feed</span>
+    </div>
+    <ul class="post" style="list-style: none;">
+      <li *ngFor="let item of articles; let i = index; trackBy: trackByFn" class="new-post" style="border-bottom: 1px solid #ddd;display: flex">
+        <div class="new-post" style="display: flex;flex-direction: column;width: 100%;">
+          <div style="display: flex;align-items: center">
+
+            <span style="width:40px;font-size:44px;color:#ddd"><i class="fas fa-smile-wink"></i></span>
+            <div style="flex-grow: 1; margin-right: 30px;
+          margin-left: 15px;
+          margin-top: 16px;">
+              <p style="margin-bottom: 0px;color: green">{{item?.author.username}}</p>
+              <p style="color:#ddd">{{item?.createdAt}}</p>
+            </div>
+            <button type="button" class="btn btn-outline-success" style="height: 31px; "><i class="fas fa-heart"></i> 0</button>
+          </div>
+          <h3 [routerLink]="['/detail-article',item.slug]">{{item.title}}</h3>
+          <p>{{item.description}}</p>
+          <a href="#" [hidden]="isHidden" (click)="showPost($event,i)">Read more...</a>
+          <p [class.show]="isShow" [hidden]="isShow">{{item?.slug}}
+            <a (click)="disable()" style="color:darkgreen;cursor:pointer;border:1px solid #ddd">hidden content</a>
+          </p>
+
+        </div>
+
+      </li>
+    </ul>
+  </div>
+</ng-template>

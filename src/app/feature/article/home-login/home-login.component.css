@@ -12,6 +12,24 @@
     top:41%;
     
 }
+
+.active{
+    color:green;
+    padding: 0 11px;
+    border-bottom:1px solid green;
+    opacity: 1 !important;
+    font-weight: bold;
+
+}
+
+.showlink{
+    display: none !important;
+}
+
+.showtitle{
+    display: block !important;
+}
+
 .ticket {
     font-family: Arial;
     font-size: 12px;

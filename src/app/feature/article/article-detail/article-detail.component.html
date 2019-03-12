@@ -1,63 +1,219 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#" style="margin-left: 200px;color:green
-  ">Conduit</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-    
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse navbar-wrap" style="margin-left:589px"  id="navbarNavAltMarkup">
-    <div class="navbar-nav" style="display: flex;
-    align-items: center;
-    justify-content: space-around;
-    width: 403px;">
-      <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-      <span style="display: flex;align-items: center">        
-      <a><i class="fas fa-edit"></i></a>
-        <a class="nav-item nav-link"  [routerLink]="['/new-article']" routerLinkActive="active">New Article</a>
-      </span>
-      <span style="display: flex;align-items: center">
-           <a><i class="fas fa-cog"></i></a>
-        <a class="nav-item nav-link" [routerLink]="['/update-profile']" routerLinkActive="active">Settings</a>
-      </span>
-      <a class="nav-item nav-link disabled" href="#">HUNGIT</a>
+<div style="margin-left: 200px;
+margin-top: 39px;
+margin-bottom: 39px;font-size: 25px;">NEW POST</div>
+<div class="wrap" style="height: 1000vh">
+  <div class="header" style="width: 100%;
+padding-left: 600px;display: flex;
+flex-direction: column;
+justify-content: center;height: auto;
+    border-top: 2px solid #ddd;">
+    <div class="header-first" style="display: flex;
+  width: 56%;
+  align-items: center;">
+      <span style="width:40px;font-size:44px;color: #423f3f;"><i class="fas fa-smile-wink"></i></span>
+      <div style="    margin-right: 30px;
+      margin-left: 15px;
+      margin-top: 16px;">
+        <a [routerLink]="['/detail-article']" style="margin-bottom: 0px;">ismarider</a>
+        <p style="color:#ddd">October 25,2018</p>
+      </div>
+      <button type="button" class="btn btn-outline-secondary" style="margin-right: 20px;font-size: 14px;
+      box-sizing: border-box;
+      padding: 3px 4px;"><i
+          class="fas fa-plus"></i> Unfollow ismariter</button>
+      <button type="button" style="font-size: 14px;
+      box-sizing: border-box;
+      padding: 3px 4px;" class="btn btn-outline-success"><i
+          class="fas fa-heart"></i> Favorite Article(0)</button>
+
     </div>
-   
   </div>
-  <span style="display: flex;align-content: center;justify-content: center">
-    <i class="fas fa-sign-out-alt" style="margin-top: 13px;margin-right: -11px;"></i>
-      <a class="nav-item nav-link disabled" href="#"> logout</a>
+  <ng-container *ngIf="accessToken?.token == null;else elseBlock">
+    <div style="display:flex;margin-left: 450px;margin-top: 30px">
+      <a [routerLink]="['/login']">sign in</a> &nbsp; or &nbsp; <a [routerLink]="['/signup']">sign up</a> &nbsp; to add
+      comment in this article
+    </div>
+    <table class="table table-bordered" style="width:50%;margin-left: 438px;
+margin-top: 50px;">
+      <thead>
+        <tr>
+          <th scope="col">First</th>
 
-  </span>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="height:auto">
+          <th scope="row">
+            <div class="header-first" style="display: flex;
+        width: 56%;
+        align-items: center;">
+              <span style="width:40px;font-size:44px;color: #423f3f;"><i class="fas fa-smile-wink"></i></span>
+              <div style="    margin-right: 30px;
+            margin-left: 15px;
+            margin-top: 16px;display: flex">
+                <p style="margin-bottom: 0px;margin: 0 9px 0 0;color:green">ismarider</p>
+                <p style="color:#ddd">October 25,2018</p>
+              </div>
+            </div>
+          </th>
+        </tr>
+        
+      </tbody>
+    </table>
+  </ng-container>
+
+  <ng-template #elseBlock>
+    <div class="post-wrap" style="text-align: center;display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;">
+      <textarea name="" id="comment" cols="30" rows="6" style="width: 50%;" name="comment" [(ngModel)]="comment1"
+        #comment placeholder="write a comment"></textarea>
+      <div style="width: 50%;
+    background-color: #ddd;
+    height: 70px;
+    position: relative;">
+
+        <button style="position: absolute;
+      top: 23%;
+      right: 2%;" type="button" class="btn  btn-success"
+          (click)="addComment(comment.value)">post comment</button>
+
+      </div>
+      <div *ngIf="artcleService.editArticle === true">
+        <button style="position: absolute;
+      top: 90%;
+      left: 25%;" type="button" class="btn  btn-success"
+          (click)="onEdit(article)">Edit Article</button>
+        <button style="position: absolute;
+      top: 90%;
+      left: 32%;" type="button" class="btn  btn-danger"
+          (click)="onDeleteArticle(article)">Delete Article</button>
+      </div>
+      <table *ngIf="article" class="table table-bordered" style="width:50%;
+margin-top: 82px;;">
+
+        <thead>
+          <tr style="display: flex;align-content: space-around">
+            <th scope="col" style="width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      text-align: center;
+      box-sizing: border-box;">
+              <p style="margin-top: 23px">{{article?.author?.bio}}</p>
+              <button type="button" class="btn btn-outline-secondary" style="margin-right: 20px;font-size: 14px;"><i
+                  class="fas fa-plus"></i> follow({{article?.author?.following}}) </button>
+
+              <button type="button" style="font-size: 14px;" class="btn btn-outline-success"><i class="fas fa-heart"></i>
+                Favorite Article({{article?.favoritesCount}})</button>
+
+            </th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="height:auto">
+            <th scope="row">
+              <div class="header-first" style="display: flex;
+        width: 56%;
+        align-items: center;">
+                <span style="width:40px;font-size:44px;color: #423f3f;"><i class="fas fa-smile-wink"></i></span>
+                <div style="    margin-right: 30px;
+            margin-left: 15px;
+            margin-top: 16px;display: flex">
+                  <p style="margin-bottom: 0px;margin: 0 9px 0 0;color:green">{{article?.author?.username}}</p>
+                  <p style="color:#ddd">{{article?.createdAt}}</p>
+                </div>
+              </div>
+            </th>
+
+          </tr>
+          <tr style="height:auto">
+            <th scope="row">
+              {{article?.body}}
+            </th>
+
+          </tr>
+
+        </tbody>
+      </table>
+     
+      <div>
+        <h2 style="margin-left: -586px;">Comment({{comments?.length||0}})</h2>
+        <div *ngFor="let item of comments; let i = index; trackBy: trackByFn" style="border-bottom:1px solid #ddd;margin-top: 20px;
+  width: 766px;
+  padding-left: 148px;">
+          <div style="margin-left: -143px;
+    display: flex;
+   ">
+
+            <span style="width: 40px;
+    font-size: 44px;
+    color: #3a3232;
+    margin-right: 17px;
+  "><i class="fas fa-smile-wink"></i>
+            </span>
+            <div style="display: flex;
+            flex-direction: column;
+    justify-content: center;">
+
+              <div style="    display: flex;
+            margin-top: 11px;">
+                <span style="color: black;
+               font-weight: bold;">{{item.author.username}} </span>
+                <span style="margin-left: 10px;">{{item.createdAt}}</span>
+
+              </div>
+              <span style="
+               overflow: hidden;
+         ;word-break: break-all;text-align: left;">{{item.body}}</span>
+
+              <div style="margin-left: 4px;
+       display: flex;
+       align-items: center;
+       margin-top: 11px;">
+                <span style="margin-right: 23px;"><i class="far fa-thumbs-up"></i></span>
+                <span style="margin-right: 22px;"><i class="far fa-thumbs-down"></i></span>
+                <span>trả lời</span>
+              </div>
+            </div>
+            <span style="color: #907878;
+               font-size: 22px;
+               text-align: center;
+               position: absolute;
+    left: 74%;"
+              class="show-setting" (click)="onHover(item.id)"><i class="fas fa-ellipsis-h"></i></span>
+            <div [style.display]="display === true && pos === i  ? 'block' : 'none'" style="border: 1px solid #ddd;
+         padding: 2px 19px;    height: 51px;
+         position: absolute;
+    left: 75.6%;
+    margin-top: 11px;"
+              class="setting">
+              <p style="margin-top: 0;
+            margin-bottom: 0px;cursor: pointer;" (click)="onDelete(item.id)">
+                delete</p>
+              <p style="margin-top: 0;
+            margin-bottom: 0px;cursor: pointer;">edit</p>
+            </div>
 
 
-</nav>
+          </div>
+          <!-- <div style="margin-left: -20px;
+  display: flex;
+  align-items: center;">
+    <span style="margin-right: 23px;"><i class="far fa-thumbs-up"></i></span>
+    <span style="margin-right: 22px;"><i class="far fa-thumbs-down"></i></span>
+    <span >trả lời</span>
+  </div> -->
 
-<form style="margin-left: 200px;margin-top: 30px">
-<div class="form-group ">
-  <div class="col-sm-10">
-    <input type="text" class="form-control form-control-sm" id="colFormLabelSm" placeholder="Article title">
-  </div>
-</div>
-<div class="form-group ">
-  <div class="col-sm-10">
-    <input type="text" class="form-control" id="colFormLabel" placeholder="what's this article about">
-  </div>
-</div>
-<div class="form-group ">
-  <div class="col-sm-10">
-  <textarea class="form-control" rows="5" id="comment" placeholder="what your article(in markdown"></textarea>
-</div>
-</div>
 
-<div class="form-group ">
-  <div class="col-sm-10">
-    <input type="email" class="form-control " id="colFormLabelLg" placeholder="enter tags)">
-  </div>
-</div>
-<div class="form-group ">
-  <div class="" style="padding-left: 930px;">
-    <button type="button" class="btn btn-success " sttyle="    width: 100px; ">button</button>
-  </div>
-</div>
+        </div>
 
-</form>
+      </div>
+
+    </div>
+
+
+  </ng-template>
+</div>

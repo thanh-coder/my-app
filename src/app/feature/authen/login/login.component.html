@@ -1,30 +1,25 @@
 <!-- <app-header-login></app-header-login> -->
 <div style="display: flex;align-items: center;flex-direction: column;">
-
-
-
-
-<form action="" method="POST" role="form" #userForm="ngForm" (ngSubmit)="onSubmit(userForm)">
+  <form action="" method="POST" role="form" #userForm="ngForm" (ngSubmit)="onSubmit(userForm)">
     <div style="display: flex;align-items: center;flex-direction: column;">
-        <h3>Singn in</h3>
-        <a [routerLink]="['/signup']">need a acount</a>
- </div>
- <div *ngIf="error == -1" class="alert alert-danger">
-  <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
-  <strong>user or password isvalid</strong> 
-</div>
-  <div class="form-group">
-    <label for="">email</label>
-    <input type="text" class="form-control" id="" [(ngModel)]="user.email" name="email" placeholder="email" style="width:300px">
-  </div>
-
-  <div class="form-group">
-      <label for="">password</label>
-      <input type="text" class="form-control" id="" [(ngModel)]="user.password" name="password" placeholder="password" style="width:300px">
+      <h3>Singn in</h3>
+      <a [routerLink]="['/signup']">need a acount</a>
     </div>
-  
+    <div *ngIf="error == -1" class="alert alert-danger">
+      <button type="button" class="close" data-dismiss="alert" aria-hidden="true"></button>
+      <strong>user or password isvalid</strong>
+    </div>
+    <div class="form-group">
+      <label for="">email</label>
+      <input type="text" class="form-control" id="" [(ngModel)]="user.email" name="email" placeholder="email" style="width:300px">
+    </div>
 
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
+    <div class="form-group">
+      <label for="">password</label>
+      <input type="text" class="form-control" id="" [(ngModel)]="user.password" name="password" placeholder="password"
+        style="width:300px">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
 </div>
 <!-- <app-footer></app-footer> -->

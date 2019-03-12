@@ -1,90 +1,99 @@
-<ng-container *ngIf="accessToken?.token != null;else elseBlock">
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#" style="margin-left: 200px;color:green
-  ">Conduit</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-    
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse navbar-wrap" style="margin-left:589px"  id="navbarNavAltMarkup">
-    <div class="navbar-nav" style="display: flex;
+<!-- <ng-container *ngIf="accessToken?.token != null;else elseBlock"> -->
+<!-- <ng-container *appAccess="islogin"> -->
+<div *appAccess="accessToken.getToken()" id="login">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#" style="margin-left: 200px;color:green">Conduit</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
+      aria-expanded="false" aria-label="Toggle navigation">
+
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse navbar-wrap" style="margin-left:589px" id="navbarNavAltMarkup">
+      <div class="navbar-nav" style="display: flex;
     align-items: center;
     justify-content: space-around;
     width: 403px;">
-      <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-      <!-- <a class="nav-item nav-link active"  (click)="viewUser()">inforUser <span class="sr-only">(current)</span></a> -->
-      <span style="display: flex;align-items: center">        
-      <a><i class="fas fa-edit"></i></a>
-        <a class="nav-item nav-link"  [routerLink]="['/new-article']" routerLinkActive="active">New Article</a>
-      </span>
-      <span style="display: flex;align-items: center">
-           <a><i class="fas fa-cog"></i></a>
-        <a class="nav-item nav-link" [routerLink]="['/update-profile']" routerLinkActive="active">Settings</a>
-      </span>
-      <a class="nav-item nav-link" [routerLink]="['/profile']" routerLinkActive="active">HUNGIT</a>
+        <a class="nav-item nav-link active" [routerLink]="['/']">Home <span class="sr-only">(current)</span></a>
+        <!-- <a class="nav-item nav-link active"  (click)="viewUser()">inforUser <span class="sr-only">(current)</span></a> -->
+        <span style="display: flex;align-items: center">
+          <a><i class="fas fa-edit"></i></a>
+          <a class="nav-item nav-link" [routerLink]="['/new-article']" routerLinkActive="active" (click)="onChange()">New
+            Article</a>
+        </span>
+        <span style="display: flex;align-items: center">
+          <a><i class="fas fa-cog"></i></a>
+          <a class="nav-item nav-link" [routerLink]="['/update-profile']" routerLinkActive="active">Settings</a>
+        </span>
+        <a class="nav-item nav-link" [routerLink]="['/profile']" routerLinkActive="active">{{user?.username}}</a>
+      </div>
+
     </div>
-   
-  </div>
-  <span style="display: flex;align-content: center;justify-content: center">
-    <i class="fas fa-sign-out-alt" style="margin-top: 13px;margin-right: -14px;"></i>
-      <a class="nav-item nav-link" style="cursor: pointer"  (click)="logout()"> logout</a>
+    <span style="display: flex;align-content: center;justify-content: center">
+      <i class="fas fa-sign-out-alt" style="margin-top: 13px;margin-right: -14px;"></i>
+      <a class="nav-item nav-link" style="cursor: pointer" (click)="logout()"> logout</a>
 
-  </span>
-</nav>
+    </span>
+  </nav>
 
-<div class="header" style="width: 100%;
-padding-left: 376px;    display: flex;
-flex-direction: column;
-justify-content: center;height: 186px;background-color: #2c2d2d">
-  <h3 style="color: white">I like</h3>
-  <div class="header-first" style="display: flex;
+  <div class="header" style="width: 100%;
+    padding-left: 205px;display: flex;
+    flex-direction: column;
+    justify-content: center;height: 186px;background-color: #2c2d2d">
+    <h3 style="color: white">I like</h3>
+    <div class="header-first" style="display: flex;
   width: 56%;
   align-items: center;">
-      <span style="width:40px;font-size:44px;color:#ddd"><i  class="fas fa-smile-wink"></i></span>
+      <span style="width:40px;font-size:44px;color:#ddd"><i class="fas fa-smile-wink"></i></span>
       <div style="    margin-right: 30px;
       margin-left: 15px;
       margin-top: 16px;">
-        <p  style="margin-bottom: 0px;color: white">ismarider</p>
+        <p style="margin-bottom: 0px;color: white">ismarider</p>
         <p style="color:#ddd">October 25,2018</p>
       </div>
-      <button type="button" class="btn btn-outline-secondary" style="margin-right: 20px"><i class="fas fa-plus"></i> Unfollow ismariter</button>
+      <button type="button" class="btn btn-outline-secondary" style="margin-right: 20px"><i class="fas fa-plus"></i>
+        Unfollow ismariter</button>
       <button type="button" class="btn btn-outline-success"><i class="fas fa-heart"></i> Favorite Article(0)</button>
+    </div>
   </div>
+  <!-- </ng-container> -->
 </div>
-</ng-container>
-<ng-template #elseBlock>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#" style="margin-left: 200px;color:green
+
+<!-- <ng-template  *appAccess="!islogin"> -->
+<div *appAccess="!accessToken.getToken()">
+  <nav class="navbar navbar-expand-lg navbar-light bg-light" id="nologin">
+    <a class="navbar-brand" href="#" style="margin-left: 386px;color:green
         ">Conduit</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse navbar-wrap" style="margin-left:589px"  id="navbarNavAltMarkup">
-          <div class="navbar-nav" style="display: flex;
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
+      aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse navbar-wrap" style="margin-left:589px" id="navbarNavAltMarkup">
+      <div class="navbar-nav" style="display: flex;
           align-items: center;
           justify-content: space-around;
           width: 275px;">
-            <a class="nav-item nav-link active" [routerLink]="['/home']">Home <span class="sr-only">(current)</span></a>
-            <span style="display: flex;align-items: center">        
-            <a><i class="fas fa-edit"></i></a>
-            <li routerLinkActive="active" >
-              <a class="nav-item nav-link active" [routerLink]="['/login']">Sign In</a>
-            </li>
-            </span>
-            <span style="display: flex;align-items: center">        
-                <a><i class="fas fa-edit"></i></a>
-                  <li routerLinkActive="active">
-                  <a class="nav-item nav-link active"  [routerLink]="['/signup']" >Sign Up</a>
-                </li>
-                </span>
-          </div>
-        </div>
-      </nav>
-      <div class="header" style="width: 100%;
+        <a class="nav-item nav-link active" [routerLink]="['/home']">Home <span class="sr-only">(current)</span></a>
+        <span style="display: flex;align-items: center">
+          <a><i class="fas fa-edit"></i></a>
+          <li routerLinkActive="active">
+            <a class="nav-item nav-link active" [routerLink]="['/login']">Sign In</a>
+          </li>
+        </span>
+        <span style="display: flex;align-items: center">
+          <a><i class="fas fa-edit"></i></a>
+          <li routerLinkActive="active">
+            <a class="nav-item nav-link active" [routerLink]="['/signup']">Sign Up</a>
+          </li>
+        </span>
+      </div>
+    </div>
+  </nav>
+  <div class="header" style="width: 100%;
      display: flex;
     flex-direction: column;
     justify-content: center;align-items: center;height: 186px;background-color:green">
-      <h2 style="color: white">conduit</h2>
-       <span style="color: white">A place to share your knowledge</span>
-      </div>  
-</ng-template>
+    <h2 style="color: white">conduit</h2>
+    <span style="color: white">A place to share your knowledge</span>
+  </div>
+</div>
+<!-- </ng-template> -->

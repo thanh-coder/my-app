@@ -11,9 +11,10 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing-module';
 // import { HomeLoginComponent } from './feature/home-login/home-login.component';
 // import { ProfileComponent } from './feature/profile/profile.component';
-import { ArticleComponent } from './feature/article/article.component';
+// import { ArticleComponent } from './feature/article/article.component';
 import{LoginGuard} from './share/service/guards/login.guard'
 import{Service} from './share/service/model/userService'
+import{Service1} from './share/service/model/articleService'
 import { HttpClientModule } from '@angular/common/http';
 import { UpdateProfileComponent } from './feature/profile/update-profile/update-profile.component';
 import { InforProfileComponent } from './feature/profile/infor-profile/infor-profile.component';
@@ -28,7 +29,8 @@ import {ShareModule} from './share/share.module'
 import {AuthenModule } from './feature/authen/authen.module'
 import {ProfileModule } from './feature/profile/profile.module';
 import { AccessTokenService } from './share/service/tokenService/access-token.service'
-
+import { AccessDirective } from './share/directive/access.directive'
+import {HoverDirective} from './custom-directive/hover-directive'   
 const routes: Routes = [
   {path:'',redirectTo:'/home',pathMatch:'full'},
   // {path:'profile',component:ProfileComponent,canActivate:[LoginGuard]},
@@ -46,7 +48,9 @@ const routes: Routes = [
     // ProfileComponent,
     // ArticleComponent,
     UpdateProfileComponent,
-    InforProfileComponent
+    InforProfileComponent,
+    AccessDirective,
+    HoverDirective
   
     // ModuleComponent
   ],
@@ -61,7 +65,7 @@ const routes: Routes = [
     HttpClientModule
 
   ],
-  providers: [Service, ApiService,LoginGuard, AccessTokenService],
+  providers: [Service, ApiService,LoginGuard, AccessTokenService,Service1],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

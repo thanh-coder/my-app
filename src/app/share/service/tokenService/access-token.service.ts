@@ -11,28 +11,40 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class AccessTokenService {
 public token:any=null;
   constructor(private router: Router) {
-    var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    this.token = currentUser && currentUser.token;
+    var currentUser = JSON.parse(this.getLocalStorage('currentUser'));
+    // this.token = currentUser && currentUser.token;
+    this.setToken(currentUser.token)
+   }
+  
+   public setLocalStorage(item,value){
+     localStorage.setItem(item,value);
+   }
+ 
+   public getLocalStorage(item){
+     return localStorage.getItem(item);
+   }
+   public setToken(value){
+     this.token = value;
+   }
+
+   public getToken(){
+     return this.token;
    }
    
    public logout(){
-     if(localStorage.getItem('currentUser'))
-    this.token = null;
+     if(this.getLocalStorage('currentUser'))
+    this.setToken(null);
     localStorage.removeItem('currentUser');
     this.router.navigate(['login'])
 
    }
    
    public checkUser(){
-     if(localStorage.getItem('currentUser')){
+     if(this.getLocalStorage('currentUser')){
        return true;
      }else{
        this.router.navigate(['login'])
        return false;
      }
    }
-
-
-  
-
 }
