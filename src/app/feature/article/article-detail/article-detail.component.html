@@ -1,113 +1,66 @@
-<div style="margin-left: 200px;
-margin-top: 39px;
-margin-bottom: 39px;font-size: 25px;">NEW POST</div>
+<div style="margin-left: 200px;margin-top: 39px;margin-bottom: 39px;font-size: 25px;">NEW POST</div>
 <div class="wrap" style="height: 1000vh">
-  <div class="header" style="width: 100%;
-padding-left: 600px;display: flex;
-flex-direction: column;
-justify-content: center;height: auto;
-    border-top: 2px solid #ddd;">
-    <div class="header-first" style="display: flex;
-  width: 56%;
-  align-items: center;">
+  <div class="header" style="width: 100%;padding-left: 401px;display: flex;flex-direction: column;justify-content: center;height: auto; border-top: 2px solid #ddd;">
+    <div class="header-first" style="display: flex; width: 65%;align-items: center;;text-align: center">
       <span style="width:40px;font-size:44px;color: #423f3f;"><i class="fas fa-smile-wink"></i></span>
-      <div style="    margin-right: 30px;
-      margin-left: 15px;
-      margin-top: 16px;">
-        <a [routerLink]="['/detail-article']" style="margin-bottom: 0px;">ismarider</a>
-        <p style="color:#ddd">October 25,2018</p>
+      <div style="margin-right: 30px; margin-left: 15px;margin-top: 16px;text-align: center">
+        <a [routerLink]="['/detail-article']" style="margin-bottom: 0px;text-decoration: none;color: green;">{{users.username}}</a>
+        <p style="color:#9bcece">October 25,2018</p>
       </div>
-      <button type="button" class="btn btn-outline-secondary" style="margin-right: 20px;font-size: 14px;
-      box-sizing: border-box;
-      padding: 3px 4px;"><i
-          class="fas fa-plus"></i> Unfollow ismariter</button>
-      <button type="button" style="font-size: 14px;
-      box-sizing: border-box;
-      padding: 3px 4px;" class="btn btn-outline-success"><i
-          class="fas fa-heart"></i> Favorite Article(0)</button>
-
+      <button type="button" [disabled]="hiddenFollow ? true :false" class="btn btn-outline-secondary" style="margin-right: 20px;font-size: 14px; box-sizing: border-box;padding: 3px 4px;" (click)="followUser(article.author.username)"> <i
+        class="fas fa-plus"></i> follow {{article?.author?.username}}</button>
+      <button type="button" class="btn btn-outline-secondary" [disabled]="hiddenunFollow ? true :false" style="margin-right: 20px;font-size: 14px; box-sizing: border-box; padding: 3px 4px;" (click)="unfollowUser(article.author.username)"><i class="fas fa-minus"></i> Unfollow {{article?.author?.username}}</button>
+      <button type="button" style="font-size: 14px; box-sizing: border-box;padding: 3px 4px;margin-right: 17px;" class="btn btn-outline-success" [disabled]="hiddenFavorite? true :false" (click)="favoriteArticle(article.slug)"><i class="fas fa-heart"></i> Favorite Article</button>
+      <button type="button" style="font-size: 14px; box-sizing: border-box; padding: 3px 4px;" class="btn btn-outline-success" [disabled]="hiddenunFavorite? true :false" (click)="unFavoriteArticle(article.slug)"><i class="fas fa-heart-broken"></i> unFavorite Article</button>
     </div>
   </div>
   <ng-container *ngIf="accessToken?.token == null;else elseBlock">
     <div style="display:flex;margin-left: 450px;margin-top: 30px">
-      <a [routerLink]="['/login']">sign in</a> &nbsp; or &nbsp; <a [routerLink]="['/signup']">sign up</a> &nbsp; to add
-      comment in this article
+      <a [routerLink]="['/login']">sign in</a> &nbsp; or &nbsp; <a [routerLink]="['/signup']">sign up</a> &nbsp; to ad comment in this article
     </div>
-    <table class="table table-bordered" style="width:50%;margin-left: 438px;
-margin-top: 50px;">
+    <table class="table table-bordered" style="width:50%;margin-left: 438px;margin-top: 50px;">
       <thead>
         <tr>
           <th scope="col">First</th>
-
         </tr>
       </thead>
       <tbody>
         <tr style="height:auto">
           <th scope="row">
-            <div class="header-first" style="display: flex;
-        width: 56%;
-        align-items: center;">
+            <div class="header-first" style="display: flex; width: 56%;align-items: center;">
               <span style="width:40px;font-size:44px;color: #423f3f;"><i class="fas fa-smile-wink"></i></span>
-              <div style="    margin-right: 30px;
-            margin-left: 15px;
-            margin-top: 16px;display: flex">
-                <p style="margin-bottom: 0px;margin: 0 9px 0 0;color:green">ismarider</p>
+              <div style="margin-right: 30px; margin-left: 15px; margin-top: 16px;display: flex">
+                <p style="margin-bottom: 0px;margin: 0 9px 0 0;color:green">{{users.username}}</p>
                 <p style="color:#ddd">October 25,2018</p>
               </div>
             </div>
           </th>
         </tr>
-        
+
       </tbody>
     </table>
   </ng-container>
 
   <ng-template #elseBlock>
-    <div class="post-wrap" style="text-align: center;display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;">
+    <div class="post-wrap" style="text-align: center;display: flex;flex-direction: column;justify-content: center;align-items: center;">
       <textarea name="" id="comment" cols="30" rows="6" style="width: 50%;" name="comment" [(ngModel)]="comment1"
         #comment placeholder="write a comment"></textarea>
-      <div style="width: 50%;
-    background-color: #ddd;
-    height: 70px;
-    position: relative;">
-
-        <button style="position: absolute;
-      top: 23%;
-      right: 2%;" type="button" class="btn  btn-success"
+      <div style="width: 50%;background-color: #ddd; height: 70px; position: relative;">
+        <button style="position: absolute;top: 23%;right: 2%;" type="button" class="btn  btn-success"
           (click)="addComment(comment.value)">post comment</button>
-
       </div>
       <div *ngIf="artcleService.editArticle === true">
-        <button style="position: absolute;
-      top: 90%;
-      left: 25%;" type="button" class="btn  btn-success"
-          (click)="onEdit(article)">Edit Article</button>
-        <button style="position: absolute;
-      top: 90%;
-      left: 32%;" type="button" class="btn  btn-danger"
+        <button style="position: absolute;top: 90%;left: 25%;" type="button" class="btn  btn-success" (click)="onEdit(article)">Edit Article</button>
+        <button style="position: absolute;top: 90%;left: 32%;" type="button" class="btn  btn-danger"
           (click)="onDeleteArticle(article)">Delete Article</button>
       </div>
-      <table *ngIf="article" class="table table-bordered" style="width:50%;
-margin-top: 82px;;">
-
+      <table *ngIf="article" class="table table-bordered" style="width:50%;margin-top: 82px;;">
         <thead>
           <tr style="display: flex;align-content: space-around">
-            <th scope="col" style="width: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      text-align: center;
-      box-sizing: border-box;">
+            <th scope="col" style="width: 100%;display: flex;align-items: center;justify-content: space-around;text-align: center; box-sizing: border-box;">
               <p style="margin-top: 23px">{{article?.author?.bio}}</p>
-              <button type="button" class="btn btn-outline-secondary" style="margin-right: 20px;font-size: 14px;"><i
-                  class="fas fa-plus"></i> follow({{article?.author?.following}}) </button>
-
-              <button type="button" style="font-size: 14px;" class="btn btn-outline-success"><i class="fas fa-heart"></i>
-                Favorite Article({{article?.favoritesCount}})</button>
-
+              <button type="button" class="btn btn-outline-secondary" style="margin-right: 20px;font-size: 14px;"><i class="fas fa-plus"></i> follow({{follows?.follow||false}}) </button>
+              <button type="button" style="font-size: 14px;" class="btn btn-outline-success"><i class="fas fa-heart"></i>Favorite Article({{favorites?.favorite||false}})</button>
             </th>
 
           </tr>
@@ -138,7 +91,7 @@ margin-top: 82px;;">
 
         </tbody>
       </table>
-     
+
       <div>
         <h2 style="margin-left: -586px;">Comment({{comments?.length||0}})</h2>
         <div *ngFor="let item of comments; let i = index; trackBy: trackByFn" style="border-bottom:1px solid #ddd;margin-top: 20px;
@@ -196,24 +149,9 @@ margin-top: 82px;;">
               <p style="margin-top: 0;
             margin-bottom: 0px;cursor: pointer;">edit</p>
             </div>
-
-
           </div>
-          <!-- <div style="margin-left: -20px;
-  display: flex;
-  align-items: center;">
-    <span style="margin-right: 23px;"><i class="far fa-thumbs-up"></i></span>
-    <span style="margin-right: 22px;"><i class="far fa-thumbs-down"></i></span>
-    <span >trả lời</span>
-  </div> -->
-
-
         </div>
-
       </div>
-
     </div>
-
-
   </ng-template>
 </div>

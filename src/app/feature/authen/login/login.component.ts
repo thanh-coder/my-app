@@ -33,7 +33,7 @@ export class LoginComponent implements OnInit {
   async  login(userform) {
     try {
       let res = await this.service.signIn(userform.value);
-      localStorage.setItem('currentUser', JSON.stringify({ username: res.user.username, token: res.user.token }));
+      localStorage.setItem('currentUser', JSON.stringify({ username: res.user.username, token: res.user.token, email: userform.value.email,password:userform.value.password}));
       this.accessToken.setToken(res.user.token);
       this.router.navigate([''])
       // window.location.reload();

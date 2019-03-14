@@ -30,7 +30,6 @@ import {AuthenModule } from './feature/authen/authen.module'
 import {ProfileModule } from './feature/profile/profile.module';
 import { AccessTokenService } from './share/service/tokenService/access-token.service'
 import { AccessDirective } from './share/directive/access.directive'
-import {HoverDirective} from './custom-directive/hover-directive'   
 const routes: Routes = [
   {path:'',redirectTo:'/home',pathMatch:'full'},
   // {path:'profile',component:ProfileComponent,canActivate:[LoginGuard]},
@@ -49,9 +48,7 @@ const routes: Routes = [
     // ArticleComponent,
     UpdateProfileComponent,
     InforProfileComponent,
-    AccessDirective,
-    HoverDirective
-  
+    AccessDirective  
     // ModuleComponent
   ],
   imports: [

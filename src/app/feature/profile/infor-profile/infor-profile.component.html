@@ -18,7 +18,7 @@
     edit profile settings</button>
 </div>
 
-<div class=content style="width: 50%;margin-left: 200px;margin-top: 23px;height: 1000vh;">
+<!-- <div class=content style="width: 50%;margin-left: 200px;margin-top: 23px;height: 1000vh;">
   <div class="content-top" style="border-bottom: 1px solid #ddd">
     <span style="margin-right: 39px;
     opacity: 0.5;" id="yourFeed" #yourFeed [class.active]="isactive" (click)="onchange($event)">my
@@ -87,5 +87,79 @@
     </ul>
   </ng-template>
 
-</div>
+</div> -->
+
+<ng-container *ngIf="accessToken.token !=null;else elseBlock">
+  <div class=content style="width: 50%;margin-left: 200px;margin-top: 23px;height: 1000vh;">
+    <div class="content-top" style="border-bottom: 1px solid #ddd">
+      <span style="margin-right: 39px;
+    opacity: 0.5;" id="yourFeed" #yourFeed [class.active]="isactive" (click)="onchange($event)">My Article</span>
+      <span style="opacity: 0.5;" [class.active]="!isactive" id="globalFeed" #globalFeed (click)="onchange($event)">Favorite article</span>
+    </div>
+    <ng-container *ngIf="isactive == false;else elseBlock">
+      <ul class="post" style="list-style: none;">
+        <li *ngFor="let item of articles; let i = index; trackBy: trackByFn" class="new-post" style="border-bottom: 1px solid #ddd;display: flex">
+          <div class="new-post" style="display: flex;flex-direction: column;width: 100%;">
+            <div style="display: flex;align-items: center">
+              <span style="width:40px;font-size:44px;color:#ddd"><i class="fas fa-smile-wink"></i></span>
+              <div style="flex-grow: 1; margin-right: 30px;
+            margin-left: 15px;
+            margin-top: 16px;">
+                <a [routerLink]="['/detail-profile']" style="margin-bottom: 0px;color: green">{{item?.author.username}}</a>
+                <p style="color:#ddd">{{item?.createdAt}}</p>
+              </div>
+              <button type="button" class="btn btn-outline-success" style="height: 31px; "   (click)="tha_tim(item.body,item.slug,i)">
+              <i class="fas fa-heart"></i><span >{{countHeart[i]?.count||item.favoritesCount}}</span></button>
+
+            </div>
+            <h3 [routerLink]="['/detail-article',item.slug]">{{item.title}}</h3>
+            <p>{{item.description}}</p>
+            <a href="#" [class.showlink]="isslug == item.slug" style="display: block" (click)="showPost($event,item.slug)">Read
+              more...</a>
+            <p [class.showtitle]="isShow == item.slug" [hidden]="show" style="display: none">{{item?.slug}}
+              <a (click)="disable(item.slug)" style="color:darkgreen;cursor:pointer;border:1px solid #ddd">hidden
+                content</a>
+            </p>
+
+          </div>
+
+        </li>
+      </ul>
+
+    </ng-container>
+    <ng-template #elseBlock>
+      <ul class="post" style="list-style: none;">
+        <li *ngFor="let item of articles_private; let i = index; trackBy: trackByFn" class="new-post" style="border-bottom: 1px solid #ddd;display: flex">
+          <div class="new-post" style="display: flex;flex-direction: column;width: 100%;">
+            <div style="display: flex;align-items: center">
+
+              <span style="width:40px;font-size:44px;color:#ddd"><i class="fas fa-smile-wink"></i></span>
+              <div style="flex-grow: 1; margin-right: 30px;
+            margin-left: 15px;
+            margin-top: 16px;">
+                <p style="margin-bottom: 0px;color: green">{{item?.author.username}}</p>
+                <p style="color:#ddd">{{item?.createdAt}}</p>
+              </div>
+              <button type="button" class="btn btn-outline-success" style="height: 31px; " (click)="tha_tim(item.body,item.slug,i)"><i class="fas fa-heart"></i><span  >{{countHeart[i]?.count||item.favoritesCount}}</span></button>
+
+            </div>
+            <h3 [routerLink]="['/detail-article',item.slug]">{{item.title}}</h3>
+            <p>{{item.description}}</p>
+            <a href="#" [class.showlink]="isslug == item.slug" style="display: block" (click)="showPost($event,item.slug)">Read
+              more...</a>
+            <p [class.showtitle]="isShow == item.slug" [hidden]="show" style="display: none">{{item?.slug}}
+              <a (click)="disable(item.slug)" style="color:darkgreen;cursor:pointer;border:1px solid #ddd">hidden
+                content</a>
+            </p>
+
+          </div>
+
+        </li>
+
+      </ul>
+    </ng-template>
+
+  </div>
+
+</ng-container>
 

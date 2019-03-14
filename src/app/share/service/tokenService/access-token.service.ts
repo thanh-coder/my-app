@@ -10,6 +10,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 @Injectable()
 export class AccessTokenService {
 public token:any=null;
+public favoriteArticle:number=0;
+public likeHeart:number=0;
+public followUser:number=0;
+
   constructor(private router: Router) {
     var currentUser = JSON.parse(this.getLocalStorage('currentUser'));
     // this.token = currentUser && currentUser.token;
@@ -19,6 +23,40 @@ public token:any=null;
    public setLocalStorage(item,value){
      localStorage.setItem(item,value);
    }
+
+   public countFavorite(){
+    this.favoriteArticle = this.favoriteArticle + 1;
+     return this.favoriteArticle;
+   }
+
+   public countdesFavorite(){
+     if(this.favoriteArticle == 0){
+      this.favoriteArticle = 0;
+     }else{
+      this.favoriteArticle = this.favoriteArticle - 1;
+     }
+    return this.favoriteArticle;
+  }
+
+   public countIncFollow():number{
+    this.followUser =  this.followUser + 1;
+    return this.followUser ;
+  }
+
+  public countDesFollow(){
+    if(this.followUser == 0){
+    this.followUser = 0;
+    }else{
+    this.followUser-=1;
+    }
+    return this.followUser ;
+    }
+
+    public countHeart(){
+      this.likeHeart = this.likeHeart + 1;
+       return this.likeHeart;
+     }
+ 
  
    public getLocalStorage(item){
      return localStorage.getItem(item);

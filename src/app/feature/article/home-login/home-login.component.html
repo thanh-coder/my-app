@@ -19,16 +19,17 @@
             margin-top: 16px;">
                 <a [routerLink]="['/detail-profile']" style="margin-bottom: 0px;color: green">{{item?.author.username}}</a>
                 <p style="color:#ddd">{{item?.createdAt}}</p>
+                <p>abc{{countHeart?.count||0}}</p>
+                
               </div>
-              <button type="button" class="btn btn-outline-success" style="height: 31px; "><i class="fas fa-heart"></i>
-                0</button>
+              <button type="button" class="btn btn-outline-success" style="height: 31px; " (click)="tha_tim(item.body,item.slug,i)"><i class="fas fa-heart"></i><span  >{{countHeart[i]?.count||item.favoritesCount}}</span></button>
 
             </div>
             <h3 [routerLink]="['/detail-article',item.slug]">{{item.title}}</h3>
             <p>{{item.description}}</p>
             <a href="#" [class.showlink]="isslug == item.slug" style="display: block" (click)="showPost($event,item.slug)">Read
               more...</a>
-            <p [class.showtitle]="isShow == item.slug" [hidden]="show" style="display: none">{{item?.slug}}
+            <p [class.showtitle]="isShow == item.slug" [hidden]="show" style="display: none">{{item?.body}}
               <a (click)="disable(item.slug)" style="color:darkgreen;cursor:pointer;border:1px solid #ddd">hidden
                 content</a>
             </p>
@@ -41,7 +42,7 @@
     </ng-container>
     <ng-template #elseBlock>
       <ul class="post" style="list-style: none;">
-        <li *ngFor="let item of articles; let i = index; trackBy: trackByFn" class="new-post" style="border-bottom: 1px solid #ddd;display: flex">
+        <li *ngFor="let item of articles_private; let i = index; trackBy: trackByFn" class="new-post" style="border-bottom: 1px solid #ddd;display: flex">
           <div class="new-post" style="display: flex;flex-direction: column;width: 100%;">
             <div style="display: flex;align-items: center">
 
@@ -51,10 +52,9 @@
             margin-top: 16px;">
                 <p style="margin-bottom: 0px;color: green">{{item?.author.username}}</p>
                 <p style="color:#ddd">{{item?.createdAt}}</p>
-              </div>
-              <button type="button" class="btn btn-outline-success" style="height: 31px; "><i class="fas fa-heart"></i>
-                0</button>
 
+              </div>
+              <button type="button" class="btn btn-outline-success" style="height: 31px; " (click)="tha_tim(item.body,item.slug,i)"><i class="fas fa-heart"></i><span  >{{countHeart[i]?.count||item.favoritesCount}}</span></button>
             </div>
             <h3 [routerLink]="['/detail-article',item.slug]">{{item.title}}</h3>
             <p>{{item.description}}</p>
@@ -79,22 +79,22 @@
 <div class="wrap">
 
   <h3>popular Tags</h3>
-  <div class="ticket"><span class="circle"></span><a href="#">CSS3</a></div>
-  <div class="ticket"><span class="circle"></span><a href="#">HTML5</a></div>
-  <div class="ticket"><span class="circle"></span><a href="#">Design</a></div>
-  <div class="ticket"><span class="circle"></span><a href="#">Development</a></div>
-  <div class="ticket"><span class="circle"></span><a href="#">CSS3</a></div>
-  <div class="ticket"><span class="circle"></span><a href="#">HTML5</a></div>
-  <div class="ticket"><span class="circle"></span><a href="#">Design</a></div>
-  <div class="ticket"><span class="circle"></span><a href="#">Development</a></div>
-  <div class="ticket"><span class="circle"></span><a href="#">CSS3</a></div>
-  <div class="ticket"><span class="circle"></span><a href="#">HTML5</a></div>
-  <div class="ticket"><span class="circle"></span><a href="#">Design</a></div>
-  <div class="ticket"><span class="circle"></span><a href="#">Development</a></div>
+  <div class="ticket" ><span class="circle"></span><a [routerLink]="['/home']" (click)="onSearch('tag','AngularJS')">AngularJS</a></div>
+  <div class="ticket" ><span class="circle"></span><a [routerLink]="['/home']" (click)="onSearch('author','jake')">author jake</a></div>
+  <div class="ticket" ><span class="circle"></span><a [routerLink]="['/home']" (click)="onSearch('favorited','jake')">favorite jake</a></div>
+  <div class="ticket" ><span class="circle"></span><a [routerLink]="['/home']" (click)="onSearch('limit',20)"> limit article</a></div>
+  <div class="ticket" ><span class="circle"></span><a [routerLink]="['/home']" (click)="onSearch('offset',0)">skip number</a></div>
+  <div class="ticket" ><span class="circle"></span><a [routerLink]="['/home']">HTML5</a></div>
+  <div class="ticket" ><span class="circle"></span><a [routerLink]="['/home']">Design</a></div>
+  <div class="ticket" ><span class="circle"></span><a [routerLink]="['/home']">Development</a></div>
+  <div class="ticket" ><span class="circle"></span><a [routerLink]="['/home']">CSS3</a></div>
+  <div class="ticket" ><span class="circle"></span><a [routerLink]="['/home']">HTML5</a></div>
+  <!-- <div class="ticket" ><span class="circle"></span><a [routerLink]="['/home']">Design</a></div>
+  <div class="ticket" ><span class="circle"></span><a [routerLink]="['/home']">Development</a></div> -->
 </div>
 <!-- <app-footer></app-footer> -->
 
-<!-- <ng-template #elseBlock>
+<ng-template #elseBlock>
   <div class=content style="width: 50%;margin-left: 200px;margin-top: 23px;height: 1000vh;">
     <div class="content-top" style="border-bottom: 1px solid #ddd">
       <span style="opacity: 0.5;" [class.active]="!isactive" id="globalFeed" #globalFeed (click)="onchange($event)">Global
@@ -126,4 +126,4 @@
       </li>
     </ul>
   </div>
-</ng-template> -->
+</ng-template>

@@ -29,8 +29,8 @@ export class Service {
     username: "HungIT",
     describe: "handsome,hoa dong",
     bio: "i dont know",
-    password: "",
-    email: ""
+    password: JSON.parse(localStorage.getItem('currentUser')).password,
+    email: JSON.parse(localStorage.getItem('currentUser')).email
   };
 
   public user: User = new User();
@@ -57,7 +57,7 @@ export class Service {
     }
     this.data = { ...this.data, ...acount };
     // return this.apiService.POST(`${config.userURL}/users`, object, httpOptions)
-    return this.apiService.POST(`users`, object, httpOptions)
+    return this.apiService.POST(`users`, object)
 
   }
 
@@ -69,7 +69,7 @@ export class Service {
       }
     }
     this.data = { ...this.data, ...user };
-    return this.apiService.POST(`users/login`, object, httpOptions).toPromise();
+    return this.apiService.POST(`users/login`, object).toPromise();
     // return this.apiService.POST(`${config.userURL}/users/login`, object, httpOptions).toPromise();
 
   }
@@ -85,8 +85,8 @@ export class Service {
     var httpOptions1 = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.accessToken.token })
     }
-    return this.apiService.GET(`profiles/username`, httpOptions1).toPromise();
-    // return this.apiService.GET(`${config.userURL}/profiles/username`, httpOptions1).toPromise();
+    return this.apiService.GET(`profiles/username`).toPromise();
+    // return this.apiService.GET(`${config.userURL}/profiles/username`).toPromise();
   }
 
   updateProfile(user: any): Observable<any> {
@@ -100,7 +100,7 @@ export class Service {
     var httpOptions1 = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.accessToken.token })
     }
-    return this.apiService.UPDATE('', user1, httpOptions1)
+    return this.apiService.UPDATE('', user1)
   }
 
 

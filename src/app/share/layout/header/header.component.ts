@@ -12,6 +12,9 @@ export class HeaderComponent implements OnInit, OnChanges {
   public user: any;
   public islogin: any = false;
   public nologin: any;
+  public follows:any;
+  public accessArticle:any;
+
   constructor(
     private ref: ChangeDetectorRef,
     public accessToken: AccessTokenService,
@@ -23,8 +26,11 @@ export class HeaderComponent implements OnInit, OnChanges {
 
   }
   ngOnInit() {
+    // let article = JSON.parse(localStorage.getItem('store-user'));    
+    // this.follows = JSON.parse(localStorage.getItem(`follow-${article.username}`));
 
-    // console.log("toke:"+this.accessToken.token)
+    console.log(this.accessToken.followUser)
+    console.log(this.accessToken.favoriteArticle)
     this.user = JSON.parse(localStorage.getItem('currentUser'));
     // if(this.accessToken.token!=null){
     //   this.islogin = true;

@@ -6,3 +6,11 @@
     font-weight: bold;
 
 }
+
+.showlink{
+    display: none !important;
+}
+
+.showtitle{
+    display: block !important;
+}

@@ -21,6 +21,7 @@ export class Service1 {
   public edit_Add: boolean = false;
   public acounts: any;
   public user: User = new User();
+  public favoriteArticle:number;
 
   constructor(
     public apiService: ApiService,
@@ -29,17 +30,15 @@ export class Service1 {
   ) { }
 
   getArticle(): Promise<any> {
-    return this.apiService.GET(`articles`, httpOptions).toPromise();
+    return this.apiService.GET(`articles`).toPromise();
   }
 
-  //    getAllUser(): Observable<any> {
-  //     return  this.http.get<any>(this.userURL).pipe(
-  //       tap(receivedAcount => {
-  //  this.acounts=receivedAcount;
-  //       }),
-  //       catchError(error => of([]))
-  //     );
-  //   }
+  getFeed(key?:any,tag?:string): Promise<any> {
+    var httpOptions1 = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.accessToken.token })
+    }
+    return this.apiService.GET(`articles/feed?${key}=${tag}`).toPromise();
+  }
 
   addArticle(article): Promise<any> {
     let body = {
@@ -53,7 +52,7 @@ export class Service1 {
     var httpOptions1 = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.accessToken.token })
     }
-    return this.apiService.POST(`articles`, body, httpOptions1).toPromise();
+    return this.apiService.POST(`articles`, body).toPromise();
   }
 
   addComment(comment, slug): Promise<any> {
@@ -65,7 +64,7 @@ export class Service1 {
     var httpOptions1 = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.accessToken.token })
     }
-    return this.apiService.POST(`articles/${slug}/comments`, body, httpOptions1).toPromise();
+    return this.apiService.POST(`articles/${slug}/comments`, body).toPromise();
   }
 
   edit_Article(article, slug) {
@@ -80,7 +79,7 @@ export class Service1 {
     var httpOptions1 = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.accessToken.token })
     }
-    return this.apiService.POST(`articles/${slug}`, body, httpOptions1).toPromise();
+    return this.apiService.POST(`articles/${slug}`, body).toPromise();
   }
 
   delete_Comment_Article(id, slug) {
@@ -88,7 +87,7 @@ export class Service1 {
     var httpOptions1 = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.accessToken.token })
     }
-    return this.apiService.DELETE(`articles/${slug}/comments/${id}`, httpOptions1).toPromise();
+    return this.apiService.DELETE(`articles/${slug}/comments/${id}`).toPromise();
   }
 
   delete_Article(slug) {
@@ -96,13 +95,74 @@ export class Service1 {
     var httpOptions1 = {
       headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.accessToken.token })
     }
-    return this.apiService.DELETE(`${config.userURL}/articles/${slug}`, httpOptions1).toPromise();
+    return this.apiService.DELETE(`articles/${slug}`).toPromise();
+  }
+
+  Follow_user(param){
+    console.log(this.accessToken.token)
+    let body = {
+      "article": {
+        "title":"",
+        "description":" article.description",
+        "body":"article.body",
+        "tagList": ["article.tagList"]
+      }
+    }
+    var httpOptions1 = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.accessToken.token })
+    }
+    return this.apiService.POST(`profiles/${param}/follow`,body).toPromise();
+  }
+
+
+  unFollow_user(param) {
+    console.log({ param })
+    var httpOptions1 = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.accessToken.token })
+    }
+    return this.apiService.DELETE(`profiles/${param}/follow`).toPromise();
+  }
+
+
+  favorite_article(param){
+    console.log(this.accessToken.token)
+    let body = {
+      "article": {
+        "title":"",
+        "description":" article.description",
+        "body":"article.body",
+        "tagList": ["article.tagList"]
+      }
+    }
+    var httpOptions1 = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.accessToken.token })
+    }
+    return this.apiService.POST(`articles/${param}/favorite`,body).toPromise();
+  }
+
+
+  unFavorite_article(param) {
+    console.log({ param })
+    var httpOptions1 = {
+      headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.accessToken.token })
+    }
+    return this.apiService.DELETE(`articles/${param}/favorite`).toPromise();
   }
 
 
   getArticleFromSlug(slug: any): Promise<any> {
-    return this.apiService.GET(`articles/${slug}`, httpOptions).toPromise();
+    return this.apiService.GET(`articles/${slug}`).toPromise();
   }
+
+
+  //    getAllUser(): Observable<any> {
+  //     return  this.http.get<any>(this.userURL).pipe(
+  //       tap(receivedAcount => {
+  //  this.acounts=receivedAcount;
+  //       }),
+  //       catchError(error => of([]))
+  //     );
+  //   }
 
   // async getAllUser(user): Promise<any> {
   //   let check:boolean=false;

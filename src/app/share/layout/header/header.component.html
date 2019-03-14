@@ -47,12 +47,13 @@
       <div style="    margin-right: 30px;
       margin-left: 15px;
       margin-top: 16px;">
-        <p style="margin-bottom: 0px;color: white">ismarider</p>
+        <p style="margin-bottom: 0px;color: white">{{user.username}}</p>
         <p style="color:#ddd">October 25,2018</p>
       </div>
-      <button type="button" class="btn btn-outline-secondary" style="margin-right: 20px"><i class="fas fa-plus"></i>
-        Unfollow ismariter</button>
-      <button type="button" class="btn btn-outline-success"><i class="fas fa-heart"></i> Favorite Article(0)</button>
+      <button type="button" class="btn btn-outline-secondary" style="margin-right: 20px;color: green;
+      border: 2px solid green;"><i class="fas fa-plus"></i>
+        follow({{accessToken?.followUser||0}})</button>
+      <button type="button" class="btn btn-outline-success"><i class="fas fa-heart"></i> Favorite Article({{accessToken?.favoriteArticle||0}})</button>
     </div>
   </div>
   <!-- </ng-container> -->
