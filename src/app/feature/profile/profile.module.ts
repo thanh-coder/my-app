@@ -1,18 +1,21 @@
 import { NgModule } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { FormsModule } from '@angular/forms';
 import { profileRoutes } from './profile.routes'
 import { RouterModule, Routes } from '@angular/router';
 import { ShareModule } from '../../share/share.module'
-
+import { UpdateProfileComponent } from './update-profile/update-profile.component';
+import { InforProfileComponent } from './infor-profile/infor-profile.component';
+import { ProfileComponent } from './profile/profile.component';
 @NgModule({
   imports: [
-    // CommonModule,
-    // FormsModule,
     RouterModule.forChild(profileRoutes),
     ShareModule,
-
   ],
-  declarations: []
+  declarations: [
+    UpdateProfileComponent,
+    InforProfileComponent,
+    ProfileComponent
+  ]
+
+
 })
 export class ProfileModule { }

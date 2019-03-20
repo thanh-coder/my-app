@@ -7,7 +7,8 @@ import { ArticleDetailComponent } from './article-detail/article-detail.componen
 
 
 export const articleRoutes: Routes = [
-  { path: 'home', component: HomeLoginComponent },
   { path: 'new-article', component: NewArticleComponent },
-  { path: 'detail-article/:id', component: ArticleDetailComponent }
+  { path: 'detail-article/:id', component: ArticleDetailComponent },
+  {path:'home',component:HomeLoginComponent}
+  
 ];

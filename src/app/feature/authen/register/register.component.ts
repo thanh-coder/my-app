@@ -27,20 +27,17 @@ export class RegisterComponent implements OnInit {
     }
     this.checkLogin();
   }
-  checkLogin() {
-    //  if(localStorage.getItem('user')){
-    //    this.router.navigate([''])
-    //  }
-  }
+  checkLogin() { }
 
   onSubmit(userForm: NgForm) {
     this.service.signUp(userForm.value).subscribe((inforUser) => {
       console.log(inforUser);
       if (inforUser != null) {
-        localStorage.setItem('currentUser', JSON.stringify({ username: inforUser.user.username, token: inforUser.user.token }))
+        localStorage.setItem('currentUser', JSON.stringify({ username: inforUser.user.username, token: inforUser.user.token, email: inforUser.user.email, password: userForm.value.password, image: inforUser.user.image, bio: inforUser.user.bio }))
         this.accessToken.token = inforUser.user.token;
+        this.accessToken.inforUser = { username: inforUser.user.username, token: inforUser.user.token, email: userForm.value.email, password: userForm.value.password, image: inforUser.user.image || "https://st.quantrimang.com/photos/image/2018/09/27/hinh-nen-meo-de-thuong-23.jpg", bio: inforUser.user.bio || "i dont know" }
         this.router.navigate(['home']);
-        console.log('token current :' + this.accessToken.token)
+        // console.log('token current :' + this.accessToken.token)
       } else {
         this.error = -1;
         this.router.navigate(['login']);
@@ -50,8 +47,5 @@ export class RegisterComponent implements OnInit {
 
   ngOnChanges() {
     console.log(this.acount)
-
   }
-
-
 }

@@ -20,6 +20,7 @@ import { UpdateProfileComponent } from './feature/profile/update-profile/update-
 import { InforProfileComponent } from './feature/profile/infor-profile/infor-profile.component';
 import{AccessGuard} from './share/service/guards/access.guard';
 // import{UserService} from './share/service/userService'
+//  import { HomeLoginComponent } from './feature/article/home-login/home-login.component'
 
 import { ApiService } from './share/service/lib/api.service';
 // import { ModuleComponent } from './feature/profile/module/module.component'
@@ -32,6 +33,8 @@ import { AccessTokenService } from './share/service/tokenService/access-token.se
 import { AccessDirective } from './share/directive/access.directive'
 const routes: Routes = [
   {path:'',redirectTo:'/home',pathMatch:'full'},
+  { path: 'profile', loadChildren: './feature/profile/profile.module#ProfileModule' },
+
   // {path:'profile',component:ProfileComponent,canActivate:[LoginGuard]},
   // {path:'update-profile',component:UpdateProfileComponent}
 ];
@@ -40,14 +43,15 @@ const routes: Routes = [
     AppComponent,
     HeaderComponent,
     FooterComponent,
+    
     // HeaderLoginComponent,
     // LoginComponent,
     // RegisterComponent,
     // HomeLoginComponent,
     // ProfileComponent,
     // ArticleComponent,
-    UpdateProfileComponent,
-    InforProfileComponent,
+    // UpdateProfileComponent,
+    // InforProfileComponent,
     AccessDirective  
     // ModuleComponent
   ],
@@ -58,7 +62,8 @@ const routes: Routes = [
     AuthArticleModule,
     AuthenModule,
     ProfileModule,
-    RouterModule.forRoot(routes),
+    // RouterModule.forRoot(routes),
+    AppRoutingModule,
     HttpClientModule
 
   ],

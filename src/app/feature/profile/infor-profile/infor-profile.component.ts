@@ -3,6 +3,9 @@ import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, OnChanges } fr
 import { Service1 } from '../../../share/service/model/articleService'
 import { AccessTokenService } from '../../../share/service/tokenService/access-token.service'
 import { async } from 'q';
+import { ActivatedRoute, Router, Params } from '@angular/router';
+import { Subscription } from 'rxjs/Subscription'
+
 
 @Component({
   selector: 'app-infor-profile',
@@ -12,130 +15,122 @@ import { async } from 'q';
 export class InforProfileComponent implements OnInit {
   public profile: object = {
   }
-  public isactive: boolean = false;
-  public isShow: any;
+  public isactive: boolean = true;
+  public isShow: string;
   public isHidden: boolean = false;
   public isslug: string;
   public articles: any;
+  public username: string;
   public articles_private: any;
+  public article_user: any = [];
   public private_user: boolean = false;
   public seperate_user: any;
-  public countHeart: any =[];
-  public body: any=[];
+  public countHeart: any = [];
+  public body: string[] = [];
+  public properties: any = [];
+  public currentUser: any;
+  public subscription: Subscription;
+
   constructor(public service: Service,
     public artcleService: Service1,
-    public accessToken: AccessTokenService) {
+    public accessToken: AccessTokenService,
+    private activateRoute: ActivatedRoute,
+    public router: Router) {
   }
 
   ngOnInit() {
-    if (this.service.data) {
-      this.profile = {
-        urlImage: this.service.data.image || "https://www.pexels.com/photo/sunglasses-sunset-summer-sand-46710/",
-        name: this.service.data.username || "HungIT",
-        describe: this.service.data.describe || "handsome,hoa dong",
-        email: this.service.data.email || "anomoyos",
-        password: this.service.data.password || "******",
-      }
-      this.artcleService.editArticle = false;
+    this.isactive = this.artcleService.goBackYourArticle;
+    this.artcleService.home_profile = true;
+    this.currentUser = JSON.parse(this.accessToken.getLocalStorage('currentUser'));
+    // this.router.navigate(['profile', this.currentUser.username])
 
-
-      this.artcleService.getArticle()
-        .then(res => {
-          console.log('bai viet:' + JSON.stringify(res))
-          this.articles = res.articles;
-          this.private_article(this.articles);
-          let slug = localStorage.getItem(`slug-heart`)
-        
-          if (slug == null) {
-            localStorage.setItem(`slug-heart`, JSON.stringify(this.body))
-          } else {
-            let split = slug.split('|')            // this.body = slug;
-            console.log(split)
-
-          this.articles.forEach( async (item,index) => {
-            if (split[index] == item.body) {
-              console.log(item.body)
-              let hearts = JSON.parse(localStorage.getItem(`heart-${item.body}`))
-              console.log(hearts)
-              this.countHeart[index] = hearts;
-              console.log(this.countHeart[index])
-              // break;
-            }
-           console.log(this.countHeart[index])  
-          })
-          }
+    console.log(this.currentUser)
+    this.artcleService.gobackHome = false;
+    this.subscription = this.activateRoute.params.subscribe(param => {
+      if (param.id == JSON.parse(this.accessToken.getLocalStorage('currentUser')).username) {
+        this.currentUser.username = param.id;
+        this.accessToken.check_user = true;
+        this.service.getProfile(JSON.parse(this.accessToken.getLocalStorage('currentUser')).username).then(res => {
+          console.log('user:' + JSON.stringify(res))
+          this.accessToken.inforUser = { ...this.accessToken.inforUser, ...res.profile };
         })
+      } else {
+        this.accessToken.check_user = false;
+        this.currentUser.username = param.id;
+        this.service.getProfile(this.currentUser.username).then(res => {
+          console.log('user:' + JSON.stringify(res))
+          this.accessToken.inforMember = { ...res.profile };
+        })
+      }
+    })
+
+    this.artcleService.editArticle = false;
+    this.activateRoute.queryParams.subscribe(data => {
+      console.log(data)
+      let tag = this.properties[1];
+      let keys = Object.keys(data)
+      console.log(keys)
+      console.log(tag)
+      this.artcleService.getArticle(keys[0], tag).then(res => {
+        console.log('bai viet:' + JSON.stringify(res))
+        this.articles = res.articles;
+        if (this.currentUser.username) {
+          this.private_article(this.articles)
+        }
+      })
         .catch(err => console.log(err))
-    }
+    })
   }
 
 
   public private_article(articles) {
-    this.seperate_user = JSON.parse(localStorage.getItem('currentUser'));
-    this.articles_private = articles.filter(data => {
-      return this.seperate_user.username == data.author.username;
+    this.articles_private = articles.filter((data, index) => {
+      this.accessToken.likeHeart[index] = data.favoritesCount;
+      console.log(this.accessToken.likeHeart[index])
+      return this.currentUser.username == data.author.username;
     })
   }
 
-
-  tha_tim(value,bd, i) {
+  public tha_tim(value, bd, i) {
     console.log(value)
     this.body[i] = value;
     console.log(this.body)
-    localStorage.setItem(`slug-heart`, this.body.join('|'));
-    console.log(localStorage.getItem(`slug-heart`))
     this.articles.forEach((data, index) => {
       if (data.body == value && i == index) {
         this.artcleService.favorite_article(bd).then(data => {
           console.log(data.article.favoritesCount)
-          let hearts = {
-            count: data.article.favoritesCount
-          }
-          localStorage.setItem(`heart-${value}`, JSON.stringify(hearts));
-          this.countHeart[i] = JSON.parse(localStorage.getItem(`heart-${value}`));
-          this.accessToken.likeHeart = this.countHeart[i].count;
+          this.accessToken.likeHeart[i] = data.article.favoritesCount;
         })
-        // this.slug = value;
-        // console.log('index',this.index)
-        // let hearts = {
-        //   count: this.accessToken.countIncFollow()
-        // }
-        // console.log(hearts)
-        // localStorage.setItem(`heart-${value}`, JSON.stringify(hearts));
-        // this.countHeart = JSON.parse(localStorage.getItem(`heart-${value}`));
-        // this.accessToken.likeHeart = this.countHeart.count;
       }
     })
-
-    // localStorage.setItem('slug-heart',value);
-    // this.articles.forEach((data,index) => {
-    //   if(data.slug == value && i==index){
-    //     this.slug = value;
-    //     console.log('index',this.index)
-    //     let hearts = {
-    //       count: this.accessToken.countIncFollow()
-    //     }
-    //     console.log(hearts)
-    //     localStorage.setItem(`heart-${value}`, JSON.stringify(hearts));
-    //     this.countHeart = JSON.parse(localStorage.getItem(`heart-${value}`));
-    //     this.accessToken.likeHeart = this.countHeart.count;
-    //   }
-    // })
-
   }
 
   onchange(event) {
     event.preventDefault();
-    this.isactive = !this.isactive;
+    this.isactive = true;
     if (this.isactive) {
+      this.artcleService.goBackYourArticle = true;
       this.artcleService.editArticle = true;
       console.log(this.artcleService.editArticle)
-    } else {
-      this.artcleService.editArticle = false;
-
+      this.router.navigate(['profile', this.currentUser.username])
     }
-
   }
+
+  onchange1(event, tag?: string, value?: string) {
+    event.preventDefault();
+    this.isactive = false;
+    if (!this.isactive) {
+      this.artcleService.editArticle = false;
+      this.artcleService.goBackYourArticle = false;
+      let data = `${tag}:${value}`
+      this.properties = data.split(':');
+      let obj = {};
+      obj[this.properties[0]] = this.properties[1];
+      console.log(obj)
+      this.router.navigate(['profile', this.currentUser.username], { queryParams: obj })
+    }
+  }
+
   showPost(event, slug) {
     event.preventDefault();
     this.articles.forEach(item => {
@@ -155,18 +150,17 @@ export class InforProfileComponent implements OnInit {
     });
   }
 
-  ngAfterViewInit() {
-    // document.getElementById('yourFeed').addEventListener('click',(event) => {
-    //   this.isactive = true;
-    // })
-    // document.getElementById('yourGlobal').addEventListener('click',(event) => {
-    //   this.isactive = false;
-    // })
+  viewProfile(username) {
+    this.isactive = true;
+    this.router.navigate([`profile/${username}`])
   }
 
+  editProfile(username) {
+    this.router.navigate([`profile/${username}/edit`])
+  }
 
+  ngAfterViewInit() {
 
-
-
+  }
 
 }

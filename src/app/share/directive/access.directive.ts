@@ -7,7 +7,6 @@ import { AccessTokenService } from '../service/tokenService/access-token.service
 export class AccessDirective {
 
   constructor(
-
     public accessToken: AccessTokenService,
     private templateRef: TemplateRef<any>,
     private viewContainerRef: ViewContainerRef) { }

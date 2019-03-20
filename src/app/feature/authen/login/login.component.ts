@@ -25,18 +25,19 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.user = new User();
     console.log('ban dau' + this.service.acounts)
-    if (localStorage.getItem('currentUser')) {
-      this.router.navigate([''])
+    if (this.accessToken.token) {
+      this.router.navigate(['home'])
     }
   }
 
   async  login(userform) {
     try {
       let res = await this.service.signIn(userform.value);
-      localStorage.setItem('currentUser', JSON.stringify({ username: res.user.username, token: res.user.token, email: userform.value.email,password:userform.value.password}));
+      console.log(userform.value)
+      localStorage.setItem('currentUser', JSON.stringify({ username: res.user.username, token: res.user.token, email: userform.value.email, password: userform.value.password, image: res.user.image || "https://st.quantrimang.com/photos/image/2018/09/27/hinh-nen-meo-de-thuong-23.jpg", bio: res.user.bio || "i dont know" }));
+      this.accessToken.inforUser = { username: res.user.username, token: res.user.token, email: userform.value.email, password: userform.value.password, image: res.user.image || "https://st.quantrimang.com/photos/image/2018/09/27/hinh-nen-meo-de-thuong-23.jpg", bio: res.user.bio || "i dont know" }
       this.accessToken.setToken(res.user.token);
       this.router.navigate([''])
-      // window.location.reload();
     }
     catch (err) {
       console.log(err)

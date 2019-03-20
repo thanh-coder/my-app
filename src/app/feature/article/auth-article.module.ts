@@ -19,7 +19,8 @@ import { ShareModule } from '../../share/share.module'
   declarations: [ArticleDetailComponent,
     NewArticleComponent,
     ArticleDetailComponent,
-    HomeLoginComponent],
+    HomeLoginComponent
+  ],
   providers: [
     LoginGuard,
     AccessGuard

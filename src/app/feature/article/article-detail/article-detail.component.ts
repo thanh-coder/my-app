@@ -12,19 +12,16 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
   @ViewChild("tpl") tpl: TemplateRef<any>;
   public article: any;
   public subscription: Subscription;
-  public comment1: any = "";
-  public pos: any;
+  public comment1: string = "";
+  public pos: number;
   public i: number = 0;
-  public display: any = false;
+  public display: boolean = false;
   public comments: any = [];
-  public users: any = [];
-  public follows: any;
-  public favorites: any;
-  public countFollow: number;
+  public users: any = {};
+  public follows: object;
+  public favorites: object;
   public hiddenFollow: boolean = false;
-  public hiddenunFollow: boolean = false;
   public hiddenFavorite: boolean = false;
-  public hiddenunFavorite: boolean = false;
 
   constructor(public accessToken: AccessTokenService,
     public activateRoue: ActivatedRoute,
@@ -45,67 +42,50 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
   }
 
   followUser(value) {
-    this.artcleService.Follow_user(value).then(res => {
-      console.log(this.accessToken.followUser)
-      this.hiddenFollow = true;
-      this.hiddenunFollow = false;
-      localStorage.setItem(`disable-follow-${this.article.slug}`, JSON.stringify({ hiddenFollow: true, hiddenunFollow: false }));
-      let follows = {
-        follow: res.profile.following,
-        count: this.accessToken.countIncFollow()
-      }
-      console.log(follows)
-      localStorage.setItem(`follow-${this.article.slug}`, JSON.stringify(follows));
-      this.follows = JSON.parse(localStorage.getItem(`follow-${this.article.slug}`));
-      this.accessToken.followUser = this.follows.count;
-    }).catch(err => console.log(err))
+    if (!this.hiddenFollow) {
+      this.artcleService.Follow_user(value).then(res => {
+        console.log(this.accessToken.followUser)
+        let follows = {
+          follow: res.profile.following,
+          count: this.accessToken.countIncFollow()
+        }
+        console.log(follows)
+        this.hiddenFollow = res.profile.following;
+      }).catch(err => console.log(err))
+
+    } else {
+      this.artcleService.unFollow_user(value).then(res => {
+        let follows = {
+          follow: res.profile.following,
+          count: this.accessToken.countDesFollow()
+        }
+        console.log(follows)
+        this.hiddenFollow = res.profile.following;
+      })
+    }
   }
 
+  favoriteArticle(value, user) {
+    if (!this.hiddenFavorite) {
+      this.artcleService.favorite_article(value).then(res => {
+        let favorites = {
+          favorite: res.article.favorited,
+          count: res.article.favoritesCount
+        }
+        this.accessToken.favoriteArticle = res.article.favoritesCount
+        this.hiddenFavorite = !this.hiddenFavorite;
+      }).catch(err => console.log(err))
+    } else {
+      this.artcleService.unFavorite_article(value).then(res => {
+        let favorites = {
+          favorite: res.article.favorited,
+          count: res.article.favoritesCount
+        }
+        this.accessToken.favoriteArticle = res.article.favoritesCount
+        this.hiddenFavorite = !this.hiddenFavorite;
+      }).catch(err => console.log(err))
+    }
 
-  unfollowUser(value) {
-    this.artcleService.unFollow_user(value).then(res => {
-      this.hiddenFollow = false;
-      this.hiddenunFollow = true;
-      localStorage.setItem(`disable-follow-${this.article.slug}`, JSON.stringify({ hiddenFollow: false, hiddenunFollow: true }));
-      let follows = {
-        follow: res.profile.following,
-        count: this.accessToken.countDesFollow()
-      }
-      localStorage.setItem(`follow-${this.article.slug}`, JSON.stringify(follows));
-      this.follows = JSON.parse(localStorage.getItem(`follow-${this.article.slug}`));
-      this.accessToken.followUser = this.follows.count;
-      console.log(this.accessToken.followUser)
-    }).catch(err => console.log(err))
-  }
-
-  favoriteArticle(value) {
-    this.artcleService.favorite_article(value).then(res => {
-      this.hiddenFavorite = true;
-      this.hiddenunFavorite = false;
-      localStorage.setItem(`disable-favorite-${this.article.slug}`, JSON.stringify({ hiddenFavorite: true, hiddenunFavorite: false }));
-      let favorites = {
-        favorite: res.article.favorited,
-        count: this.accessToken.countFavorite()
-      }
-      localStorage.setItem(`favorite-${this.article.slug}`, JSON.stringify(favorites));
-      this.favorites = JSON.parse(localStorage.getItem(`favorite-${this.article.slug}`));
-      this.accessToken.favoriteArticle = this.favorites.count;
-    }).catch(err => console.log(err))
-  }
-
-  unFavoriteArticle(value) {
-    this.artcleService.unFavorite_article(value).then(res => {
-      this.hiddenFavorite = false;
-      this.hiddenunFavorite = true;
-      localStorage.setItem(`disable-favorite-${this.article.slug}`, JSON.stringify({ hiddenFavorite: false, hiddenunFavorite: true }));
-      let favorites = {
-        favorite: res.article.favorited,
-        count: this.accessToken.countdesFavorite()
-      }
-      localStorage.setItem(`favorite-${this.article.slug}`, JSON.stringify(favorites));
-      this.favorites = JSON.parse(localStorage.getItem(`favorite-${this.article.slug}`));
-      this.accessToken.favoriteArticle = this.favorites.count;
-    }).catch(err => console.log(err))
   }
 
   handleParamsRoute() {
@@ -115,30 +95,11 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
       this.artcleService.getArticleFromSlug(slug).then(data => {
         console.log(data)
         this.article = data.article;
-        localStorage.setItem(`store-user`, JSON.stringify(this.article));
+        this.hiddenFollow = data.article.author.following;
+        this.hiddenFavorite = data.article.favorited;
+        this.accessToken.favoriteArticle = data.article.favoritesCount;
         if (this.article != null)
           this.comments = JSON.parse(localStorage.getItem(`comments-${this.article.slug}`))
-        this.favorites = JSON.parse(localStorage.getItem(`favorite-${this.article.slug}`));
-        this.follows = JSON.parse(localStorage.getItem(`follow-${this.article.slug}`));
-        this.accessToken.followUser = this.follows.count;
-        this.accessToken.favoriteArticle = this.favorites.count;
-        let values_follow = JSON.parse(localStorage.getItem(`disable-follow-${this.article.slug}`))
-        if(values_follow == null){
-          localStorage.setItem(`disable-follow-${this.article.slug}`, JSON.stringify({ hiddenFollow: false, hiddenunFollow: false }));
-        }else{
-          this.hiddenFollow = values_follow.hiddenFollow;
-          this.hiddenunFollow = values_follow.hiddenunFollow;
-        }
-
-        let values_favorite = JSON.parse(localStorage.getItem(`disable-favorite-${this.article.slug}`))
-        if(values_favorite == null){
-          localStorage.setItem(`disable-favorite-${this.article.slug}`, JSON.stringify({ hiddenFavorite: false, hiddenunFavorite: false }));
-        }else{
-          this.hiddenFavorite = values_favorite.hiddenFavorite;
-          this.hiddenunFavorite = values_favorite.hiddenunFavorite;
-          console.log(JSON.parse(localStorage.getItem(`disable-favorite-${this.article.slug}`)));
-        }
-
         console.log('data la:' + this.article)
       })
     })
@@ -146,25 +107,42 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
 
   onEdit(article) {
     this.artcleService.edit_Add = true;
-    localStorage.setItem("article", JSON.stringify(article));
+    this.artcleService.updateArticle = article;
     this.router.navigate(['new-article']);
+  }
+
+  gohome(){
+    if(this.artcleService.goBackYourArticle){
+    this.artcleService.goBackYourArticle = true;
+  }else{
+    this.artcleService.goBackYourArticle = false;
+  }
+  if(this.artcleService.home_profile){
+    this.router.navigate(['profile'])
+  }else{
+    this.router.navigate([''])
 
   }
+}
 
   onDeleteArticle(article) {
     console.log(JSON.stringify(article));
+    this.artcleService.goBackYourArticle = true;
     this.artcleService.delete_Article(article.slug).then(res => {
       console.log('da xoa article');
       this.article = null;
+      if (this.artcleService.gobackHome) {
+        this.router.navigate([''])
+      } else {
+        this.router.navigate(['profile', this.users.username])
+      }
     })
   }
 
   addComment(value) {
     this.artcleService.addComment(value, this.article.slug).then(res => {
-      alert(JSON.stringify(res));
       this.comments = this.comments || [];
       this.comments.push(res.comment);
-      // this.comments[this.i]=res.comment;
       localStorage.setItem(`comments-${this.article.slug}`, JSON.stringify(this.comments));
       this.comment1 = "";
     })
