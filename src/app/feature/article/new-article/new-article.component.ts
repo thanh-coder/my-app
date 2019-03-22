@@ -21,7 +21,11 @@ export class NewArticleComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     console.log(this.artcleService.gobackHome)
-    this.article1 = this.artcleService.updateArticle;
+    if (this.artcleService.edit_Add) {
+      this.article1 = this.artcleService.updateArticle;
+    } else {
+      this.article1 = {};
+    }
     console.log(this.artcleService.updateArticle)
   }
 
@@ -29,27 +33,23 @@ export class NewArticleComponent implements OnInit, OnDestroy {
     this.artcleService.edit_Add = false;
   }
 
-  onSubmit(userForm) {
-    if (this.artcleService.edit_Add) {
-      this.artcleService.goBackYourArticle = true;
-      this.artcleService.edit_Article(userForm.value, this.article1.slug).then(res => {
+  async onSubmit(userForm) {
+    try {
+      if (this.artcleService.edit_Add) {
+        this.artcleService.goBackYourArticle = true;
+        let res = await this.artcleService.edit_Article(userForm.value, this.article1.slug)
         console.log("sau khi edit data:" + JSON.stringify(res))
-        // if (this.artcleService.gobackHome) {
-        //   this.router.navigate([''])
-        // } else {
-        //   this.router.navigate(['profile'])
-        // }
-        this.router.navigate(['/detail-article',this.article1.slug])
-      })
-        .catch(err => console.log(err))
-    } else {
-      this.artcleService.goBackYourArticle = true;
-      this.artcleService.addArticle(userForm.value).then(res => {
+        this.router.navigate(['/detail-article', this.article1.slug])
+      } else {
+        this.artcleService.goBackYourArticle = true;
+        let res = await this.artcleService.addArticle(userForm.value)
         console.log("sau khi add data:" + JSON.stringify(res))
-        // this.router.navigate([''])
-        this.router.navigate(['/detail-article/'+res.article.slug])
-      })
-        .catch(err => console.log(err))
+        this.router.navigate(['/detail-article/' + res.article.slug])
+      }
+    }
+    catch (err) {
+      console.log('save data failed', err)
     }
   }
 }
+

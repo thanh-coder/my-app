@@ -2,6 +2,8 @@ import { Component, OnInit, AfterViewInit, ElementRef, ViewChild, OnChanges } fr
 import { Service1 } from '../../../share/service/model/articleService'
 import { AccessTokenService } from '../../../share/service/tokenService/access-token.service'
 import { ActivatedRoute, Router } from '@angular/router';
+import { Service } from '../../../share/service/model/userService'
+import { async } from '@angular/core/testing';
 
 @Component({
   selector: 'app-home-login',
@@ -21,6 +23,8 @@ export class HomeLoginComponent implements OnInit, OnChanges {
   public private_user: boolean = false;
   public seperate_user: any;
   public properties: string[] = [];
+  public currentUser: any;
+
   // public seperate_heart: any;
   public index: number;
   public slug: string;
@@ -29,7 +33,8 @@ export class HomeLoginComponent implements OnInit, OnChanges {
   constructor(public artcleService: Service1,
     public accessToken: AccessTokenService,
     private router: Router,
-    private activateRoute: ActivatedRoute
+    private activateRoute: ActivatedRoute,
+    public service: Service
 
   ) { }
 
@@ -71,23 +76,25 @@ export class HomeLoginComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.router.navigate(['home'])
-    this.isactive=this.artcleService.goBackYourArticle;
+    this.isactive = this.artcleService.goBackYourArticle;
     this.artcleService.home_profile = false;
     console.log(this.isactive)
     this.artcleService.editArticle = false;
     this.artcleService.gobackHome = true;
-    this.activateRoute.queryParams.subscribe(data => {
-      console.log(data)
-      let tag = this.properties[1];
-      let keys = Object.keys(data)
-      console.log(keys)
-      console.log(tag)
-      this.artcleService.getArticle(keys[0], tag).then(res => {
+    this.activateRoute.queryParams.subscribe(async data => {
+      try {
+        let tag = this.properties[1];
+        let keys = Object.keys(data)
+        console.log(keys)
+        console.log(tag)
+        let res = await this.artcleService.getArticle(keys[0], tag)
         console.log('bai viet:' + JSON.stringify(res))
         this.articles = res.articles;
         this.private_article(this.articles)
-      })
-        .catch(err => console.log(err))
+      }
+      catch (err) {
+        console.log('get data failed', err)
+      }
     })
   }
 
@@ -108,8 +115,8 @@ export class HomeLoginComponent implements OnInit, OnChanges {
   }
 
   public private_article(articles) {
-    this.seperate_user = JSON.parse(localStorage.getItem('currentUser'));
-    if (this.seperate_user) {
+    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (this.currentUser) {
       this.articles_private = articles.filter((data, index) => {
         if (this.validateFile(data.author.image)) {
           console.log('image format correctly')
@@ -118,9 +125,9 @@ export class HomeLoginComponent implements OnInit, OnChanges {
         }
         this.accessToken.likeHeart[index] = data.favoritesCount;
         console.log(this.accessToken.likeHeart[index])
-        return this.seperate_user.username == data.author.username;
+        return this.currentUser.username == data.author.username;
       })
-    }else{
+    } else {
       articles.forEach(data => {
         if (this.validateFile(data.author.image)) {
           console.log('image format correctly')
@@ -131,23 +138,79 @@ export class HomeLoginComponent implements OnInit, OnChanges {
     }
   }
 
-  public tha_tim(value, bd, i) {
-    if(this.accessToken.token){
-    console.log(value)
-    this.body[i] = value;
-    console.log(this.body)
-    this.articles.forEach((data, index) => {
-      if (data.body == value && i == index) {
-        this.artcleService.favorite_article(bd).then(data => {
-          console.log(data.article.favoritesCount)
-          this.accessToken.likeHeart[i] = data.article.favoritesCount;
-        })
+  async getlikeheart(value) {
+    try {
+      let res = await this.artcleService.getArticle(null, null)
+      this.articles = res.articles;
+      this.private_article(this.articles)
+    }
+    catch (err) {
+      console.log('get data failed', err)
+    }
+  }
+
+  getupdateUser(username) {
+    this.currentUser.username = username;
+    this.isactive = this.artcleService.goBackYourArticle;
+    console.log(this.artcleService.goBackYourArticle)
+    this.artcleService.home_profile = true;
+    console.log(this.currentUser)
+    this.artcleService.gobackHome = false;
+    this.activateRoute.params.subscribe(async param => {
+      if (param.id == JSON.parse(this.accessToken.getLocalStorage('currentUser')).username) {
+        this.isactive = this.artcleService.goBackYourArticle;
+        this.currentUser.username = param.id;
+        this.accessToken.check_user = true;
+        let res = await this.service.getProfile(JSON.parse(this.accessToken.getLocalStorage('currentUser')).username)
+        console.log('user:' + JSON.stringify(res))
+        this.accessToken.inforUser = { ...this.accessToken.inforUser, ...res.profile };
+      } else {
+        this.accessToken.check_user = false;
+        this.currentUser.username = param.id;
+        this.isactive = this.artcleService.goBackYourArticle;
+        let data = await this.service.getProfile(this.currentUser.username)
+        console.log('user:' + JSON.stringify(data))
+        this.accessToken.inforMember = { ...data.profile };
       }
     })
-  }else{
-    alert('ahjhj')
+
+    this.artcleService.editArticle = false;
+    this.activateRoute.queryParams.subscribe(async data => {
+      try {
+        console.log(data)
+        let tag = this.properties[1];
+        let keys = Object.keys(data)
+        console.log(keys)
+        console.log(tag)
+        let res = await this.artcleService.getArticle(keys[0], tag)
+        console.log('bai viet:' + JSON.stringify(res))
+        this.articles = res.articles;
+        if (this.currentUser.username) {
+          this.private_article(this.articles)
+        }
+      }
+      catch (err) {
+        console.log("get data failed", err)
+      }
+    })
   }
-  }
+  // public tha_tim(value, bd, i) {
+  //   if (this.accessToken.token) {
+  //     console.log(value)
+  //     this.body[i] = value;
+  //     console.log(this.body)
+  //     this.articles.forEach((data, index) => {
+  //       if (data.body == value && i == index) {
+  //         this.artcleService.favorite_article(bd).then(data => {
+  //           console.log(data.article.favoritesCount)
+  //           this.accessToken.likeHeart[i] = data.article.favoritesCount;
+  //         })
+  //       }
+  //     })
+  //   } else {
+  //     alert('ahjhj')
+  //   }
+  // }
 
   onSearch(tag, value) {
     let data = `${tag}:${value}`

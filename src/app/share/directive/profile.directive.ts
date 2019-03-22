@@ -2,15 +2,15 @@ import { Directive, ElementRef, HostListener, TemplateRef, ViewContainerRef, Inp
 import { AccessTokenService } from '../service/tokenService/access-token.service'
 
 @Directive({
-  selector: '[appAccess]'
+  selector: '[appProfile]'
 })
-export class AccessDirective {
+export class ProfileDirective {
 
   constructor(
     public accessToken: AccessTokenService,
     private templateRef: TemplateRef<any>,
     private viewContainerRef: ViewContainerRef) { }
-  @Input() set appAccess(islogin: Boolean) {
+  @Input() set appProfile(islogin: Boolean) {
     if (islogin) {
       this.viewContainerRef.createEmbeddedView(this.templateRef)
     } else {
@@ -18,5 +18,3 @@ export class AccessDirective {
     }
   }
 }
-
-

@@ -1,0 +1,41 @@
+.active{
+    color:green;
+    padding: 0 11px;
+    border-bottom:1px solid green;
+    opacity: 1 !important;
+    font-weight: bold;
+
+}
+
+.showlink{
+    display: none !important;
+}
+
+.showtitle{
+    display: block !important;
+}
+
+.title{
+    font-weight: bold;
+}
+.title:hover{
+    color:orange;
+}
+
+
+a#readmore{
+    display: block;
+    border: 1px solid #ddd !important;
+    width: 100px;
+    text-decoration: none;
+    text-align: center;
+    color:black;
+    margin-bottom: 11px;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 5px
+}
+a#readmore:hover{
+    color: white;
+    background-color: orange;
+}

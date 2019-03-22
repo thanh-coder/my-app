@@ -5,6 +5,8 @@ import { ShareModule } from '../../share/share.module'
 import { UpdateProfileComponent } from './update-profile/update-profile.component';
 import { InforProfileComponent } from './infor-profile/infor-profile.component';
 import { ProfileComponent } from './profile/profile.component';
+// import { ArticleDirective } from '../../share/directive/article.directive'
+
 @NgModule({
   imports: [
     RouterModule.forChild(profileRoutes),
@@ -13,7 +15,9 @@ import { ProfileComponent } from './profile/profile.component';
   declarations: [
     UpdateProfileComponent,
     InforProfileComponent,
-    ProfileComponent
+    ProfileComponent,
+    // ArticleDirective
+    // ProfileDirective
   ]
 
 

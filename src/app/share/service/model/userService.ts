@@ -1,21 +1,12 @@
 import { Injectable, OnInit } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/toPromise';
-
-import { of } from 'rxjs/observable/of';
-import { catchError, map, tap } from 'rxjs/operators';
 import { Acount } from '../../models/acount.model'
 import { User } from '../../models/user.model'
-import { HttpClient, HttpHeaders, } from '@angular/common/http';
 import { AccessTokenService } from '../tokenService/access-token.service'
-
 import { ApiService } from '../lib/api.service'
 import { config } from '../config/config-service'
 import { async } from '@angular/core/testing';
-
-var httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
-}
 
 @Injectable()
 export class Service {
@@ -31,7 +22,6 @@ export class Service {
 
   signUp(acount: any): Observable<any> {
     console.log(acount);
-    console.log(httpOptions);
     let object: any = {
       "user": {
         "username": acount.username,
@@ -53,17 +43,11 @@ export class Service {
   }
 
   getUser() {
-    var httpOptions1 = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.accessToken.token })
-    }
     console.log(this.accessToken.token)
     return this.apiService.GET(`user`).toPromise();
   }
 
   getProfile(username) {
-    var httpOptions1 = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.accessToken.token })
-    }
     return this.apiService.GET(`profiles/${username}`).toPromise();
   }
 
@@ -75,11 +59,9 @@ export class Service {
         "bio": user.bio
       }
     }
-    var httpOptions1 = {
-      headers: new HttpHeaders({ 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + this.accessToken.token })
-    }
     return this.apiService.UPDATE('user', user1)
   }
 
   ngOnint() { }
+  
 }

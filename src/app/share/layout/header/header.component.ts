@@ -53,9 +53,6 @@ export class HeaderComponent implements OnInit, OnChanges {
   }
 
   viewProfile(username){
-    // this.activateRoute.parent.params.subscribe((param:Params) => {
-    //   console.log(param['id'])
-    // })
     this.router.navigate([`profile/${username}/edit`])
   }
 

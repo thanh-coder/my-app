@@ -9,7 +9,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { articleRoutes } from './article.route'
 
 import { HomeLoginComponent } from './home-login/home-login.component';
-
+import { ProfileDirective } from '../../share/directive/profile.directive'
+// import { ValidateDirective } from '../../share/directive/validate.directive'
 import { ShareModule } from '../../share/share.module'
 @NgModule({
   imports: [
@@ -19,7 +20,9 @@ import { ShareModule } from '../../share/share.module'
   declarations: [ArticleDetailComponent,
     NewArticleComponent,
     ArticleDetailComponent,
-    HomeLoginComponent
+    HomeLoginComponent,
+    // ProfileDirective,
+    // ValidateDirective
   ],
   providers: [
     LoginGuard,

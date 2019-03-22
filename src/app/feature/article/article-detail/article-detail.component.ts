@@ -3,6 +3,7 @@ import { AccessTokenService } from '../../../share/service/tokenService/access-t
 import { ActivatedRoute, Router } from '@angular/router';
 import { Service1 } from '../../../share/service/model/articleService'
 import { Subscription } from 'rxjs/Subscription'
+import { async } from 'q';
 @Component({
   selector: 'app-article-detail',
   templateUrl: './article-detail.component.html',
@@ -20,8 +21,8 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
   public users: any = {};
   public follows: object;
   public favorites: object;
-  public hiddenFollow: boolean = false;
-  public hiddenFavorite: boolean = false;
+  public hiddenFollow: boolean;
+  public hiddenFavorite: boolean;;
 
   constructor(public accessToken: AccessTokenService,
     public activateRoue: ActivatedRoute,
@@ -32,7 +33,7 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.handleParamsRoute();
     console.log(this.artcleService.editArticle)
-    this.users = JSON.parse(localStorage.getItem(`currentUser`));
+    this.users = JSON.parse(this.accessToken.getLocalStorage(`currentUser`));
   }
 
   ngOnDestroy() {
@@ -41,111 +42,54 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  followUser(value) {
-    if (!this.hiddenFollow) {
-      this.artcleService.Follow_user(value).then(res => {
-        console.log(this.accessToken.followUser)
-        let follows = {
-          follow: res.profile.following,
-          count: this.accessToken.countIncFollow()
-        }
-        console.log(follows)
-        this.hiddenFollow = res.profile.following;
-      }).catch(err => console.log(err))
-
-    } else {
-      this.artcleService.unFollow_user(value).then(res => {
-        let follows = {
-          follow: res.profile.following,
-          count: this.accessToken.countDesFollow()
-        }
-        console.log(follows)
-        this.hiddenFollow = res.profile.following;
-      })
-    }
-  }
-
-  favoriteArticle(value, user) {
-    if (!this.hiddenFavorite) {
-      this.artcleService.favorite_article(value).then(res => {
-        let favorites = {
-          favorite: res.article.favorited,
-          count: res.article.favoritesCount
-        }
-        this.accessToken.favoriteArticle = res.article.favoritesCount
-        this.hiddenFavorite = !this.hiddenFavorite;
-      }).catch(err => console.log(err))
-    } else {
-      this.artcleService.unFavorite_article(value).then(res => {
-        let favorites = {
-          favorite: res.article.favorited,
-          count: res.article.favoritesCount
-        }
-        this.accessToken.favoriteArticle = res.article.favoritesCount
-        this.hiddenFavorite = !this.hiddenFavorite;
-      }).catch(err => console.log(err))
-    }
-
-  }
-
-  handleParamsRoute() {
-    this.subscription = this.activateRoue.params.subscribe(param => {
+  async handleParamsRoute() {
+    this.subscription = await this.activateRoue.params.subscribe(async param => {
       console.log(param)
       let slug = param.id;
-      this.artcleService.getArticleFromSlug(slug).then(data => {
-        console.log(data)
-        this.article = data.article;
-        this.hiddenFollow = data.article.author.following;
-        this.hiddenFavorite = data.article.favorited;
-        this.accessToken.favoriteArticle = data.article.favoritesCount;
-        if (this.article != null)
-          this.comments = JSON.parse(localStorage.getItem(`comments-${this.article.slug}`))
-        console.log('data la:' + this.article)
-      })
+      let data = await this.artcleService.getArticleFromSlug(slug)
+      this.article = data.article;
+      this.hiddenFollow = !data.article.author.following;
+      this.hiddenFavorite = !data.article.favorited;
+      console.log(this.hiddenFollow)
+
+      this.accessToken.favoriteArticle = data.article.favoritesCount;
+      console.log(this.accessToken.favoriteArticle)
+      if (this.article != null)
+        this.comments = JSON.parse(this.accessToken.getLocalStorage(`comments-${this.article.slug}`))
+      console.log('data la:' + this.article)
     })
   }
 
-  onEdit(article) {
-    this.artcleService.edit_Add = true;
-    this.artcleService.updateArticle = article;
-    this.router.navigate(['new-article']);
-  }
-
-  gohome(){
-    if(this.artcleService.goBackYourArticle){
+  viewProfile(username) {
     this.artcleService.goBackYourArticle = true;
-  }else{
-    this.artcleService.goBackYourArticle = false;
-  }
-  if(this.artcleService.home_profile){
-    this.router.navigate(['profile'])
-  }else{
-    this.router.navigate([''])
-
-  }
-}
-
-  onDeleteArticle(article) {
-    console.log(JSON.stringify(article));
-    this.artcleService.goBackYourArticle = true;
-    this.artcleService.delete_Article(article.slug).then(res => {
-      console.log('da xoa article');
-      this.article = null;
-      if (this.artcleService.gobackHome) {
-        this.router.navigate([''])
-      } else {
-        this.router.navigate(['profile', this.users.username])
-      }
-    })
+    this.router.navigate([`profile/${username}`])
   }
 
-  addComment(value) {
-    this.artcleService.addComment(value, this.article.slug).then(res => {
+  gohome() {
+    if (this.artcleService.goBackYourArticle) {
+      this.artcleService.goBackYourArticle = true;
+    } else {
+      this.artcleService.goBackYourArticle = false;
+    }
+    if (this.artcleService.home_profile) {
+      this.router.navigate([`profile/${this.article.author.username}`])
+    } else {
+      this.router.navigate([''])
+
+    }
+  }
+
+  async addComment(value) {
+    try {
+      let res = await this.artcleService.addComment(value, this.article.slug)
       this.comments = this.comments || [];
       this.comments.push(res.comment);
-      localStorage.setItem(`comments-${this.article.slug}`, JSON.stringify(this.comments));
+      this.accessToken.setLocalStorage(`comments-${this.article.slug}`, JSON.stringify(this.comments));
       this.comment1 = "";
-    })
+    }
+    catch (err) {
+      console.log('add comment failed', err);
+    }
   }
 
   find(id) {
@@ -167,15 +111,19 @@ export class ArticleDetailComponent implements OnInit, OnDestroy {
     }
   }
 
-  onDelete(id) {
-    this.artcleService.delete_Comment_Article(id, this.article.slug).then(res => {
+  async onDelete(id) {
+    try {
+      let res = await this.artcleService.delete_Comment_Article(id, this.article.slug)
       console.log(res)
-      let comments1 = JSON.parse(localStorage.getItem(`comments-${this.article.slug}`))
+      let comments1 = JSON.parse(this.accessToken.getLocalStorage(`comments-${this.article.slug}`))
       let value = comments1.filter(item => item.id != id)
       console.log('comments:' + JSON.stringify(value))
       localStorage.removeItem('comments')
-      localStorage.setItem(`comments-${this.article.slug}`, JSON.stringify(value))
+      this.accessToken.setLocalStorage(`comments-${this.article.slug}`, JSON.stringify(value))
       this.comments = value;
-    })
+    }
+    catch (err) {
+      console.log('delete comment failed', err)
+    }
   }
 }

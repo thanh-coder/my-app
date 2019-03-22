@@ -1,0 +1,56 @@
+<table *appProfile="article" class="table table-bordered" style="width:50%;margin-top: 82px;margin-left: 380px;">
+    <thead>
+      <tr style="display: flex;align-content: space-around">
+        <th scope="col" style="width: 100%;display: flex;align-items: center;justify-content: space-around;text-align: center; box-sizing: border-box;">
+            <div *appValidate="article?.author?.username">
+                <button  type="button" class="btn  btn-success" (click)="onEdit(article)">Edit Article</button>
+                <button  type="button" class="btn  btn-danger"
+                  (click)="onDeleteArticle(article)">Delete Article</button>
+              </div>              
+          <div>
+              <!-- <button type="button" class="btn btn-outline-secondary" style="margin-right: 0px;font-size: 14px;"><i class="fas fa-plus"></i> follow({{follows?.count||0}}) </button> -->
+              <button type="button" style="font-size: 14px;" class="btn btn-outline-success"><i class="fas fa-heart"></i>Favorite Article({{favoriteArticle||0}})</button>
+              <!-- <button type="button" style="font-size: 14px;" class="btn btn-outline-success"><i class="fas fa-heart"></i>Favorite Article({{article?.favoritesCount||0}})</button> -->
+       
+            </div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="height:auto">
+        <th scope="row">
+          <div class="header-first" style="display: flex; width: 100%;align-items: center;">
+            <span style="width:40px;font-size:44px;color: #423f3f;"><i class="fas fa-smile-wink"></i></span>
+            <div style=" margin-right: 30px;margin-left: 15px;margin-top: 16px;display: flex;flex-grow: 1">
+              <p (click)="viewProfile(article?.author?.username)" style="margin-bottom: 0px;margin: 0 9px 0 0;color:green">{{article?.author?.username}}</p>
+              <p style="color:#ddd">{{article?.createdAt|date :'dd/MM/y hh:mm:ss:a'}}</p>
+            </div>
+            <div *appProfile="users?.username">
+              <button *appNoUser="article?.author?.username" type="button"  [ngClass]="{'btn btn-success': hiddenFollow, 'btn btn-secondary': !hiddenFollow}"  style="margin-right: 20px;font-size: 14px; box-sizing: border-box;padding: 3px 4px;" >
+               <span (click)="followUser(article.author.username)" *ngIf="hiddenFollow" ><i class="fas fa-plus"  ></i> follow({{article?.author?.username}})</span>
+               <span (click)="unfollowUser(article.author.username)" *ngIf="!hiddenFollow"><i class="fas fa-minus" ></i> unfollow({{article?.author?.username}})</span>
+              </button>
+              <button type="button" [ngClass]="{'btn btn-success': hiddenFavorite,'btn btn-secondary': !hiddenFavorite}" style="margin-right: 20px;font-size: 14px; box-sizing: border-box;padding: 3px 4px;">
+                <span  (click)="favoritearticle(article.slug,article.author.username)" *ngIf="hiddenFavorite" ><i class="fas fa-heart"  ></i> favorite({{article?.author?.username}})</span>
+                <span  (click)="unfavoriteArticle(article.slug,article.author.username)" *ngIf="!hiddenFavorite"><i class="fas fa-heart-broken" ></i> unfavorite({{article?.author?.username}})</span>
+               </button>
+            </div>
+          </div>
+        </th>
+
+      </tr>
+      <tr style="height:auto">
+        <th scope="row">
+          <h3 style="font-weight: bold">{{article.title}}</h3>
+          <p style="color:#ddd">{{article?.createdAt|date :'dd/MM/y hh:mm:ss:a'}}</p>
+          <h5 style="font-weight: bold">{{article?.description}}</h5>
+          <p style="font-size: 12px">lĩnh vực sự kiện <a href="" style="color:green">{{article.tagList[0]}}</a>
+          <br>
+          <br>
+          </p>
+          <p style="text-indent: 15px;font-family: serif;
+           font-size: 14px;">{{article?.body}}</p>
+        </th>
+     </tr>
+    </tbody>
+  </table>
